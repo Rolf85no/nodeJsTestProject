@@ -1,7 +1,135 @@
 *{
-  box-shadow: border-box;
+  box-sizing: border-box;
+}
+
+:root{
+  --box-shadow-container: 1px 1px 1px 2px rgba(5, 5, 5, 0.966);
+  --box-shadow-inputs: 0.5px 1px 0.75px 1px rgba(13, 12, 12, 0.861);
+  --button-bgColor: rgb(5, 5, 5);
+  --button-textColor: white;
 }
 
 body{
   text-align: center;
+}
+
+main{
+  width: 100%;
+}
+
+button{
+  background-color: var(--button-bgColor);
+  color: var(--button-textColor);
+  border: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: var(--button-textColor);
+  color: var(--button-bgColor);
+  border: 2px solid var(--button-bgColor);
+}
+
+.postForm{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+  margin: 18px auto;
+  height: calc(2rem + 1vw);
+}
+
+.postForm label{
+  color: rgb(3, 62, 59);
+  font-weight: bold;
+}
+
+select{
+  border-radius: 10px;
+  box-shadow: var( --box-shadow-inputs);
+  padding: 4px;
+  margin: 8px;
+  font-weight: bold;
+}
+
+.postForm--button{
+  width: calc(4rem + 1vw);
+  height: 80%;
+}
+
+.postForm input{
+  width: 20%;
+}
+
+input, textarea{
+  border-radius: 10px;
+  box-shadow: var( --box-shadow-inputs);
+  padding: 4px;
+  margin: 0 8px;
+}
+
+.postContainer{
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  box-shadow: var( --box-shadow-container);
+  margin: 8px auto;
+}
+
+.postContainer button{
+  width: calc(4rem + 1vw);
+  height: calc(1.5rem + 1vw);
+  margin: 0 8px;
+}
+
+.postContainer--postText{
+  width: 90%;
+  margin-top: 8px;
+}
+
+.postContainer--username{
+  margin: 8px 0;
+}
+
+.postContainer--buttons{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 16px;
+}
+
+.hidden{
+  display: none;
+}
+
+.logIn{
+  display: flex;
+  flex-direction: column;
+  margin-top: 48px;
+}
+
+.logIn div{
+  margin: 8px auto;
+}
+
+.logIn--button{
+  margin: 8px auto;
+  width: calc(6rem + 1vw);
+  height: calc(1rem + 1vw);
+}
+
+.postContainer--updateInput{
+  margin: 8px;
+  width: 90%;
+}
+
+@media screen and ( min-width: 500px) {
+  main {
+    width: 50%;
+    margin: 0 auto;
+  }
 }
