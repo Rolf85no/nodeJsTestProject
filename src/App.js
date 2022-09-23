@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from './components/Navbar'
 import Posts from './components/Posts'
 import PostForm from './components/PostForm'
 import ErrorMessage from './components/ErrorMessage';
@@ -15,10 +16,32 @@ export default function App() {
   const maxUsernameLength = 20;
   const [error, setError] = React.useState(null);
 
-  const logIn = function () {
-    setLoggedIn(true);
+  const logIn = async (event) => {
+    try {
+      event.preventDefault();
+      const username = document.querySelector('#logIn--username');
+      const password = document.querySelector('#logIn--password');
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({ username: username.value, password: password.value })
+      }
+
+      const res = await fetch(`${url}/login`, requestOptions)
+      const apiData = await res.json();
+      if (!apiData.userFound) return writeError('Can`t find password or username')
+      setChoosenUser(username.value);
+      setLoggedIn(true);
+    }
+    catch (error) {
+      console.log(error)
+    }
+
   }
 
+  // const logIn = () => {
+  //   setLoggedIn(true);
+  // }
   React.useEffect(() => {
     if (!loading) return
     const getUsers = async () => {
@@ -65,20 +88,19 @@ export default function App() {
   const submitPost = async (event) => {
     try {
       event.preventDefault();
-      const username = document.querySelector('.postForm--username');
+      const username = choosenUser;
       const post = document.querySelector('.postForm--postText');
 
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ username: username.value, post: post.value })
+        body: JSON.stringify({ username: username, post: post.value })
       }
-      if (!username.value || !post.value) {
+      if (!post.value) {
         throw new Error('Please write username or post')
       }
       const res = await fetch(url, requestOptions);
       if (!res.status === 200) throw new Error('Something went wrong');
-      username.value = '';
       post.value = '';
       setLoading(true);
 
@@ -139,6 +161,7 @@ export default function App() {
           key={item._id}
           id={item._id}
           username={item.username}
+          choosenUser={choosenUser}
           post={item.post}
           handleDeletePost={deletePost}
           handleUpdatePost={updatePost}
@@ -152,25 +175,25 @@ export default function App() {
     :
 
     <div> loading </div>
-  const uniqueUsersEl = !loading ? users.map(user => <option key={user} value={user}> {user}</option>) : ''
 
   return (
     <div>
+      <Navbar />
+      <ErrorMessage
+        message={error}
+      />
 
       {!loggedIn
 
         ?
         <Login
           handleLogin={logIn}
+          resetErrorHandler={resetError}
         />
 
         :
 
         <main>
-          <ErrorMessage
-            message={error}
-
-          />
           <PostForm
             handleSubmit={submitPost}
             maxPostLength={maxPostLength}
@@ -179,13 +202,6 @@ export default function App() {
             maxUsernameLength={maxUsernameLength}
           />
           <h3>News-reel:</h3>
-          <div>
-            <h4>Choose poster:</h4>
-            <select onChange={getUserPost} value={choosenUser}>
-              <option value={""}> All</option>
-              {uniqueUsersEl}
-            </select>
-          </div>
 
           {postsElements}
         </main>

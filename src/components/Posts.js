@@ -19,16 +19,20 @@ export default function Posts(props) {
                     <textarea placeholder={props.post} className="postContainer--updateInput" type="text" name="postText" maxLength={props.maxPostLength} onChange={handleChange} />
 
             }
-            <div className="postContainer--buttons">
-                <button onClick={() => props.handleDeletePost(props.id)}> Delete</button>
-                {
-                    !updating
-                        ?
-                        <button onClick={() => setUpdating(prevUpdate => !prevUpdate)}>Update</button>
-                        :
-                        <button onClick={() => { setUpdating(prevUpdate => !prevUpdate); props.handleUpdatePost(props.id); }}>Save</button>
-                }
-            </div>
+            {
+                props.username === props.choosenUser
+                &&
+                <div className="postContainer--buttons">
+                    <button onClick={() => props.handleDeletePost(props.id)}> Delete</button>
+                    {
+                        !updating
+                            ?
+                            <button onClick={() => setUpdating(prevUpdate => !prevUpdate)}>Update</button>
+                            :
+                            <button onClick={() => { setUpdating(prevUpdate => !prevUpdate); props.handleUpdatePost(props.id); }}>Save</button>
+                    }
+                </div>
+            }
         </div >
     )
 }

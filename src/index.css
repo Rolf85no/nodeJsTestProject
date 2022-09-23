@@ -3,14 +3,33 @@
 }
 
 :root{
-  --box-shadow-container: 1px 1px 1px 2px rgba(5, 5, 5, 0.966);
-  --box-shadow-inputs: 0.5px 1px 0.75px 1px rgba(13, 12, 12, 0.861);
-  --button-bgColor: rgb(5, 5, 5);
-  --button-textColor: white;
+  --box-shadow-container: 1px 1px 2px 1px hsl(200, 20%,0% );
+  --box-shadow-inputs: 1px 1px 0px 1px hsl(200, 20%,70% );
+  --button-bgColor: hsl(200, 90%, 100%);
+  --button-textColor: hsl(175, 100%,20%);
 }
 
 body{
   text-align: center;
+  background-color: hsl(150, 70%, 90%);
+}
+
+.navbar{
+  background-color: var(--button-textColor);
+  color: var(--button-bgColor);
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h3{
+  margin-left: 24px;
 }
 
 main{
@@ -21,14 +40,16 @@ button{
   background-color: var(--button-bgColor);
   color: var(--button-textColor);
   border: transparent;
+  box-shadow: var( --box-shadow-inputs);
   border-radius: 10px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 button:hover{
   background-color: var(--button-textColor);
   color: var(--button-bgColor);
-  border: 2px solid var(--button-bgColor);
+
 }
 
 .postForm{
@@ -48,7 +69,10 @@ button:hover{
 
 select{
   border-radius: 10px;
+  border: transparent;
   box-shadow: var( --box-shadow-inputs);
+  color: var(--button-textColor);
+  background-color: var(--button-bgColor);
   padding: 4px;
   margin: 8px;
   font-weight: bold;
@@ -60,12 +84,13 @@ select{
 }
 
 .postForm input{
-  width: 20%;
+  width: 50%;
 }
 
 input, textarea{
   border-radius: 10px;
   box-shadow: var( --box-shadow-inputs);
+  border: transparent;
   padding: 4px;
   margin: 0 8px;
 }
@@ -76,7 +101,7 @@ input, textarea{
   flex-direction: column;
   align-items: center;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   box-shadow: var( --box-shadow-container);
   margin: 8px auto;
 }

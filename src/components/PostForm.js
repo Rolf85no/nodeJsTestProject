@@ -10,15 +10,6 @@ export default function PostForm(props) {
 
     return (
         <form className="postForm" onChange={props.resetErrorHandler}>
-            <label htmlFor="postUsername">Username: </label>
-            <input
-                className="postForm--username"
-                name="postUsername"
-                type="text"
-                maxLength={props.maxUsernameLength}
-                onChange={handleChange}
-            >
-            </input>
             <label htmlFor="postText">Post:</label>
             <input
                 className="postForm--postText"
