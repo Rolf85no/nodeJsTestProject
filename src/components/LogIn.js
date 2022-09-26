@@ -15,8 +15,11 @@ export default function LogIn(props) {
                 <label htmlFor="logIn--password">Password:</label>
                 <input name="logIn--password" type="password" ref={inputPassword} id="logIn--password" />
             </div>
+            <div className="login--buttons">
+                <button className="logIn--button" name="login" onClick={props.handleLogin}> Log In</button>
+                <button className="logIn--button" name="register" onClick={props.handleLogin}> Register</button>
+            </div>
 
-            <button className="logIn--button" onClick={props.handleLogin}> Log In</button>
         </form>
     )
 }

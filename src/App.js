@@ -16,22 +16,34 @@ export default function App() {
   const maxUsernameLength = 20;
   const [error, setError] = React.useState(null);
 
-  const logIn = async (event) => {
+  const logIn = async (event, logOrReg) => {
     try {
+      console.log(event.target.name);
       event.preventDefault();
       const username = document.querySelector('#logIn--username');
       const password = document.querySelector('#logIn--password');
+      if (!username.value && !password.value) return writeError('Please write username and password')
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ username: username.value, password: password.value })
+        body: JSON.stringify({ username: username.value, password: password.value, loggedIn: true })
       }
 
-      const res = await fetch(`${url}/login`, requestOptions)
-      const apiData = await res.json();
-      if (!apiData.userFound) return writeError('Can`t find password or username')
+      if (event.target.name === 'login') {
+        const res = await fetch(`${url}/login`, requestOptions)
+        const apiData = await res.json();
+        if (!apiData.userFound) return writeError('Can`t find password or username')
+      }
+      else {
+        const res = await fetch(`${url}/register`, requestOptions)
+        const apiData = await res.json();
+        if (apiData.userFound) return writeError('Username already taken')
+      }
+
       setChoosenUser(username.value);
       setLoggedIn(true);
+      setLoading(true);
+      resetError();
     }
     catch (error) {
       console.log(error)
@@ -39,19 +51,26 @@ export default function App() {
 
   }
 
-  // const logIn = () => {
-  //   setLoggedIn(true);
-  // }
+  const logOut = () => {
+    const requestOptions = {
+      method: 'PATCH',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({ username: choosenUser, loggedIn: loggedIn })
+    }
+
+    fetch(url, requestOptions)
+    setLoggedIn(false)
+  }
+
   React.useEffect(() => {
     if (!loading) return
     const getUsers = async () => {
       try {
-        const res = await fetch(url);
-        const apiData = await res.json();
+
+        const resPosts = await fetch(url);
+        const apiData = await resPosts.json();
         setBackEndData(apiData.posts);
-        const uniqueSet = new Set(apiData.posts.map(item => item.username))
-        const uniqueUsers = [...uniqueSet]
-        setUsers(uniqueUsers);
+        setUsers(apiData.allUsers);
       }
       catch (err) {
         console.log(err);
@@ -65,25 +84,6 @@ export default function App() {
 
     getUsers();
   }, [loading])
-
-
-  const getUserPost = async (event) => {
-    try {
-      setChoosenUser(event.target.value);
-      const res = await fetch(`${url}/${event.target.value}`)
-      const apiData = await res.json();
-      setBackEndData(apiData.posts);
-      setLoading(true)
-    }
-    catch (err) {
-      console.log(err)
-      writeError('Could not connect with database')
-    }
-    finally {
-      setLoading(false);
-    }
-
-  }
 
   const submitPost = async (event) => {
     try {
@@ -168,6 +168,7 @@ export default function App() {
           maxPostLength={maxPostLength}
           resetErrorHandler={resetError}
           handleError={writeError}
+          users={users}
         />
       )
     })
@@ -178,7 +179,10 @@ export default function App() {
 
   return (
     <div>
-      <Navbar />
+      <Navbar
+        loggedIn={loggedIn}
+        handleLogout={logOut}
+      />
       <ErrorMessage
         message={error}
       />

@@ -1,6 +1,12 @@
 import React from 'react'
 
 export default function Posts(props) {
+    let loggedIn = false;
+    for (const item of props.users) {
+        if (props.username === item.username) {
+            loggedIn = item.loggedIn;
+        }
+    }
 
     const [updating, setUpdating] = React.useState(false);
     const handleChange = function (event) {
@@ -10,7 +16,9 @@ export default function Posts(props) {
     }
     return (
         <div className="postContainer" onChange={props.resetErrorHandler}>
-            <h3 className="postContainer--username">{props.username}:</h3>
+            <h3 className="postContainer--username">{props.username}:
+                <span className="postContainer--logInStatus" style={{ color: loggedIn ? 'green' : 'red' }}> ●</span>
+            </h3>
             {
                 !updating
                     ?
