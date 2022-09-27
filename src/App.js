@@ -16,13 +16,13 @@ export default function App() {
   const maxUsernameLength = 20;
   const [error, setError] = React.useState(null);
 
-  const logIn = async (event, logOrReg) => {
+  const logIn = async (event) => {
     try {
-      console.log(event.target.name);
       event.preventDefault();
       const username = document.querySelector('#logIn--username');
       const password = document.querySelector('#logIn--password');
       if (!username.value && !password.value) return writeError('Please write username and password')
+
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
@@ -97,7 +97,7 @@ export default function App() {
         body: JSON.stringify({ username: username, post: post.value })
       }
       if (!post.value) {
-        throw new Error('Please write username or post')
+        throw new Error('Please write something')
       }
       const res = await fetch(url, requestOptions);
       if (!res.status === 200) throw new Error('Something went wrong');
@@ -125,18 +125,28 @@ export default function App() {
   }
 
 
-  const updatePost = async (id) => {
+  const updatePost = async (id, updateOrReply) => {
     try {
       const updateInput = document.querySelector('.postContainer--updateInput');
-      if (!updateInput.value) return
-      setLoading(true);
-      const requestOptions = {
-        method: 'PATCH',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ post: updateInput.value })
-      }
+      const replyInput = document.querySelector('#replyPost');
+      // if (!updateInput.value) return
+      const requestOptions =
+        updateOrReply === 'update' ?
+          {
+            method: 'PATCH',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({ post: updateInput.value })
+          }
+
+          :
+          {
+            method: 'PATCH',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({ reply: { username: choosenUser, post: replyInput.value } })
+          }
       const res = await fetch(`${url}/${id}`, requestOptions);
       if (!res.status === 200) throw new Error('Could not update post, try again later')
+      setLoading(true);
     }
     catch (err) {
       console.log(err)
@@ -163,12 +173,14 @@ export default function App() {
           username={item.username}
           choosenUser={choosenUser}
           post={item.post}
+          replies={item.replies}
           handleDeletePost={deletePost}
           handleUpdatePost={updatePost}
           maxPostLength={maxPostLength}
           resetErrorHandler={resetError}
           handleError={writeError}
           users={users}
+          handleSubmit={submitPost}
         />
       )
     })
@@ -204,6 +216,7 @@ export default function App() {
             resetErrorHandler={resetError}
             handleError={writeError}
             maxUsernameLength={maxUsernameLength}
+            typeOfPost="Post"
           />
           <h3>News-reel:</h3>
 
