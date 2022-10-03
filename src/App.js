@@ -11,7 +11,7 @@ export default function App() {
   const [loading, setLoading] = React.useState(true);
   const [users, setUsers] = React.useState(null);
   const [choosenUser, setChoosenUser] = React.useState("");
-  const url = "http://localhost:3000/api/v1/posts";
+  const url = "https://localhost:3000/api/v1/posts";
   const maxPostLength = 150;
   const maxUsernameLength = 20;
   const [error, setError] = React.useState(null);
@@ -39,8 +39,9 @@ export default function App() {
         const apiData = await res.json();
         if (apiData.userFound) return writeError('Username already taken')
       }
-
-      setChoosenUser(username.value);
+      users.forEach(user => {
+        if (user.username === username.value) setChoosenUser(user);
+      })
       setLoggedIn(true);
       setLoading(true);
       resetError();
@@ -68,9 +69,10 @@ export default function App() {
       try {
 
         const resPosts = await fetch(url);
+        if (!resPosts.status === 200) return writeError('Could not connect API');
         const apiData = await resPosts.json();
         setBackEndData(apiData.posts);
-        setUsers(apiData.allUsers);
+        setUsers(apiData.users);
       }
       catch (err) {
         console.log(err);
@@ -78,6 +80,7 @@ export default function App() {
         writeError('Could not connect with database')
       }
       finally {
+        console.log('Loaded')
         setLoading(false);
       }
     }
@@ -88,7 +91,7 @@ export default function App() {
   const submitPost = async (event) => {
     try {
       event.preventDefault();
-      const username = choosenUser;
+      const username = choosenUser.username;
       const post = document.querySelector('.postForm--postText');
 
       const requestOptions = {
@@ -127,22 +130,21 @@ export default function App() {
 
   const updatePost = async (id, updateOrReply) => {
     try {
-      const updateInput = document.querySelector('.postContainer--updateInput');
-      const replyInput = document.querySelector('#replyPost');
-      // if (!updateInput.value) return
+      const postInput = updateOrReply === 'update' ? document.querySelector('.postContainer--updateInput') : document.querySelector('#replyPost');
+      if (!postInput.value) return
       const requestOptions =
         updateOrReply === 'update' ?
           {
             method: 'PATCH',
             headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ post: updateInput.value })
+            body: JSON.stringify({ post: postInput.value })
           }
 
           :
           {
             method: 'PATCH',
             headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ reply: { username: choosenUser, post: replyInput.value } })
+            body: JSON.stringify({ reply: { username: choosenUser, post: postInput.value } })
           }
       const res = await fetch(`${url}/${id}`, requestOptions);
       if (!res.status === 200) throw new Error('Could not update post, try again later')
@@ -162,6 +164,26 @@ export default function App() {
     setError(msg)
   }
 
+  const updateUser = async (id) => {
+    try {
+      const img = document.querySelector('.imgInput');
+      const requestOptions =
+      {
+        method: 'PATCH',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({ img: img.value })
+      }
+      const res = await fetch(`${url}/user/${id}`, requestOptions);
+      if (!res.status === 200) throw new Error('Could not update post, try again later')
+      setLoading(true);
+    }
+    catch (err) {
+      setLoading(false);
+      console.log(err)
+      writeError(err.message);
+    }
+
+  }
 
   const postsElements = !loading
     ?
@@ -171,7 +193,7 @@ export default function App() {
           key={item._id}
           id={item._id}
           username={item.username}
-          choosenUser={choosenUser}
+          choosenUser={choosenUser.username}
           post={item.post}
           replies={item.replies}
           handleDeletePost={deletePost}
@@ -216,7 +238,10 @@ export default function App() {
             resetErrorHandler={resetError}
             handleError={writeError}
             maxUsernameLength={maxUsernameLength}
+            img={choosenUser.img ? choosenUser.img : "https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg"}
             typeOfPost="Post"
+            handleUpdateUser={updateUser}
+            id={choosenUser._id}
           />
           <h3>News-reel:</h3>
 
