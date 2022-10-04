@@ -54,7 +54,7 @@ export default function Posts(props) {
             }
             <div className="postContainer--buttons">
                 {
-                    props.username === props.choosenUser
+                    props.username === props.choosenUserName
                     &&
                     <div>
                         <button onClick={() => props.handleDeletePost(props.id)}> 🗑

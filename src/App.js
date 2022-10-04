@@ -80,7 +80,6 @@ export default function App() {
         writeError('Could not connect with database')
       }
       finally {
-        console.log('Loaded')
         setLoading(false);
       }
     }
@@ -97,7 +96,7 @@ export default function App() {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ username: username, post: post.value })
+        body: JSON.stringify({ username: username, post: post.value, userID: choosenUser._id })
       }
       if (!post.value) {
         throw new Error('Please write something')
@@ -167,14 +166,17 @@ export default function App() {
   const updateUser = async (id) => {
     try {
       const img = document.querySelector('.imgInput');
+      const username = document.querySelector('#updateUsername');
       const requestOptions =
       {
         method: 'PATCH',
         headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ img: img.value })
+        body: JSON.stringify({ username: username.value ? username.value : choosenUser.username, img: img.value ? img.value : choosenUser.img })
       }
       const res = await fetch(`${url}/user/${id}`, requestOptions);
       if (!res.status === 200) throw new Error('Could not update post, try again later')
+      const updatedUser = await res.json();
+      setChoosenUser(updatedUser.user);
       setLoading(true);
     }
     catch (err) {
@@ -185,6 +187,8 @@ export default function App() {
 
   }
 
+  ////// BYTT UT USERNAME MED USER-ID DETTE GJØR AT MAN KAN BYTTE NAVN UTEN AT MAN MISTER POSTS
+
   const postsElements = !loading
     ?
     backEndData.map(item => {
@@ -193,7 +197,8 @@ export default function App() {
           key={item._id}
           id={item._id}
           username={item.username}
-          choosenUser={choosenUser.username}
+          choosenUserName={choosenUser.username}
+          choosenUserId={choosenUser._id}
           post={item.post}
           replies={item.replies}
           handleDeletePost={deletePost}
@@ -241,6 +246,7 @@ export default function App() {
             img={choosenUser.img ? choosenUser.img : "https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg"}
             typeOfPost="Post"
             handleUpdateUser={updateUser}
+            username={choosenUser.username}
             id={choosenUser._id}
           />
           <h3>News-reel:</h3>

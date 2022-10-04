@@ -40,10 +40,12 @@ export default function PostForm(props) {
 
             :
 
-            <form className="postForm">
+            <form className="postForm updateUser">
                 <label htmlFor="imgLink">Image-link:</label>
-                <input name="imgLink" className="imgInput">
+                <input name="imgLink" className="imgInput updateUser">
                 </input>
+                <label htmlFor="username">Username:</label>
+                <input name="username" className="username updateUser" id="updateUsername" placeholder={props.username}></input>
                 <button className="postForm--button" type="button" onClick={() => { handleUpdateUserSubmit(); setEditing(false); }}>
                     Save
                 </button>
