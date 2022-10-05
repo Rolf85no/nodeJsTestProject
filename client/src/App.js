@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from './components/Navbar'
 import Posts from './components/Posts'
 import PostForm from './components/PostForm'
+import Users from './components/Users'
 import ErrorMessage from './components/ErrorMessage';
 import Login from './components/LogIn';
 
@@ -14,6 +15,7 @@ export default function App() {
   const url = "https://localhost:3000/api/v1/posts";
   const maxPostLength = 150;
   const maxUsernameLength = 20;
+  const defaultImage = 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg';
   const [error, setError] = React.useState(null);
 
   const logIn = async (event) => {
@@ -171,6 +173,7 @@ export default function App() {
     try {
       const img = document.querySelector('.imgInput');
       const username = document.querySelector('#updateUsername');
+      if (!img.value && !username.value) return
       const requestOptions =
       {
         method: 'PATCH',
@@ -217,7 +220,9 @@ export default function App() {
 
     <div> loading </div>
 
+
   return (
+
     <div>
       <Navbar
         loggedIn={loggedIn}
@@ -238,21 +243,32 @@ export default function App() {
         :
 
         <main>
-          <PostForm
-            handleSubmit={submitPost}
-            maxPostLength={maxPostLength}
-            resetErrorHandler={resetError}
-            handleError={writeError}
-            maxUsernameLength={maxUsernameLength}
-            img={choosenUser.img ? choosenUser.img : "https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg"}
-            typeOfPost="Post"
-            handleUpdateUser={updateUser}
-            username={choosenUser.username}
-            id={choosenUser._id}
-          />
-          <h3>News-reel:</h3>
+          <div className="somethingContainer"></div>
+          <div className="postsAndPostFormcontainer">
+            <PostForm
+              handleSubmit={submitPost}
+              maxPostLength={maxPostLength}
+              resetErrorHandler={resetError}
+              handleError={writeError}
+              maxUsernameLength={maxUsernameLength}
+              img={choosenUser.img ? choosenUser.img : defaultImage}
+              typeOfPost="Post"
+              handleUpdateUser={updateUser}
+              username={choosenUser.username}
+              id={choosenUser._id}
+            />
+            <h3>News-reel:</h3>
 
-          {postsElements}
+            {postsElements}
+          </div>
+
+          {users &&
+            <Users
+              users={users}
+              defaultImage={defaultImage}
+
+            />
+          }
         </main>
 
       }

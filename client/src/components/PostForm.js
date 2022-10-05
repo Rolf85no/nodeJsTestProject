@@ -17,10 +17,7 @@ export default function PostForm(props) {
             ?
 
             <div className="postForm">
-                <div>
-                    <img src={props.img} className="postForm--image" alt="profile"></img>
-                    <button onClick={() => setEditing(true)}> Edit user</button>
-                </div>
+                <img src={props.img} className="postForm--image" alt="profile" onClick={() => setEditing(true)}></img>
 
                 <form onChange={props.resetErrorHandler} className="postForm--form" onSubmit={props.handleSubmit}>
                     <input

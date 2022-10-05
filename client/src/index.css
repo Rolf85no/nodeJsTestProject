@@ -46,9 +46,14 @@ button{
   color: var(--button-textColor);
   border: transparent;
   box-shadow: var( --box-shadow-inputs);
-  border-radius: 5%;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
+}
+
+main{
+  display: flex;
+  flex-direction: row;
 }
 
 .navbar--logout{
@@ -67,12 +72,11 @@ button:hover{
 .postForm{
   display: flex;
   flex-direction: row;
-  width: 90%;
+  width: 100%;
   align-items: center;
   justify-content:space-between;
   margin: 18px auto;
   padding: 8px;
-  height: calc(2rem + 1vw);
 }
 
 .postForm--form{
@@ -85,6 +89,7 @@ button:hover{
 .postForm--image{
   height: calc(2rem + 1vw);
   border-radius: 25%;
+  cursor: pointer;
 }
 
 select{
@@ -115,7 +120,7 @@ input, textarea{
   padding: 4px;
 }
 
-.postContainer{
+.postContainer, .usersContainer{
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -127,7 +132,25 @@ input, textarea{
   background-color: var(--white-bgColor);
 }
 
+.usersContainer{
+  margin-top: 18px;
+  padding: 8px;
+  width: 20%;
+}
 
+.userProfile{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.userProfile img{
+  height: calc(1rem + 1vw);
+  border-radius: 25%;
+  margin-right: 25%;
+
+}
 .replyContainer{
   flex-direction: column;
   background-color: rgb(233, 224, 224);
@@ -203,14 +226,31 @@ input, textarea{
   margin: 8px;
   width: 90%;
 }
+.updateUser{
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.updateUser input{
+  margin: 8px auto;  
+}
+
 
 .replyForm{
   margin-top: 0;
 }
 
+.somethingContainer{
+  width: 20%;
+}
+
 @media screen and ( min-width: 500px) {
-  main {
+  .postsAndPostFormcontainer {
     width: 50%;
     margin: 0 auto;
+  }
+
+  .postForm{
+    width: 90%;
   }
 }
