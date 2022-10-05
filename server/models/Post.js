@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 ////// BYTT UT USERNAME MED USER-ID DETTE GJØR AT MAN KAN BYTTE NAVN UTEN AT MAN MISTER POSTS
 
 const PostSchema = new mongoose.Schema({
-    userID:
+    username:
     {
         type: String, required: [true],
         trim: true,
