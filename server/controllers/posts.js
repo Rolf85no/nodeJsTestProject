@@ -4,7 +4,7 @@ const User = require('../models/User');
 const getAllPosts = async (req, res) => {
     try {
         const posts = await Post.find({})
-        const users = await User.find({})
+        const users = await User.find({}).select(['-password']);
         if (!posts.length > 0) res.status(404).json('Could not find posts')
         if (!users.length > 0) res.status(404).json('Could not find users');
         res.json({ posts, users })

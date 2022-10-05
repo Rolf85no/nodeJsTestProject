@@ -6,7 +6,7 @@
   --box-shadow-container: 1px 1px 2px 1px hsl(200, 20%,0% );
   --box-shadow-inputs: 1px 1px 0px 1px hsl(200, 20%,70% );
   --button-bgColor:  hsl(175, 100%,20%);
-
+  --lightgreyBorder1px: 1px lightgrey solid;
 
   --button-textColor:  hsl(200, 90%, 100%);
   --text-black: hsl(200, 90%, 0%);
@@ -105,14 +105,14 @@ select{
 
 .postForm input{
   width: 70%;
+  margin: 0 auto;
 }
 
 input, textarea{
   border-radius: 10px;
   box-shadow: var( --box-shadow-inputs);
-  border: transparent;
+  border: var(--lightgreyBorder1px);
   padding: 4px;
-  margin: 0 8px;
 }
 
 .postContainer{
@@ -120,7 +120,7 @@ input, textarea{
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: none;
+  border: var(--lightgreyBorder1px);
   border-radius: 5px;
   box-shadow: var( --box-shadow-container);
   margin: 8px auto;
@@ -130,7 +130,7 @@ input, textarea{
 
 .replyContainer{
   flex-direction: column;
-  background-color: lightgray;
+  background-color: rgb(233, 224, 224);
   width: 80%;
   border-radius: 10px;
   align-items: center;
@@ -139,12 +139,13 @@ input, textarea{
 
 .replyContainer--username{
   margin: 4px 0;
+  font-size: 1rem;
 }
 
 .replyContainer--postText{
   margin: 0;
   padding: 4px 0;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 .postContainer--buttons button{
@@ -201,6 +202,10 @@ input, textarea{
 .postContainer--updateInput{
   margin: 8px;
   width: 90%;
+}
+
+.replyForm{
+  margin-top: 0;
 }
 
 @media screen and ( min-width: 500px) {

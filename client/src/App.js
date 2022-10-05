@@ -44,7 +44,6 @@ export default function App() {
       })
       setLoggedIn(true);
       setLoading(true);
-      resetError();
     }
     catch (error) {
       console.log(error)
@@ -56,7 +55,7 @@ export default function App() {
     const requestOptions = {
       method: 'PATCH',
       headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({ username: choosenUser, loggedIn: loggedIn })
+      body: JSON.stringify({ username: choosenUser.username, loggedIn: false })
     }
 
     fetch(url, requestOptions)
@@ -73,6 +72,11 @@ export default function App() {
         const apiData = await resPosts.json();
         setBackEndData(apiData.posts);
         setUsers(apiData.users);
+        if (choosenUser) {
+          apiData.users.forEach(user => {
+            user._id === choosenUser._id && setChoosenUser(user);
+          })
+        }
       }
       catch (err) {
         console.log(err);
@@ -85,7 +89,7 @@ export default function App() {
     }
 
     getUsers();
-  }, [loading])
+  }, [loading, choosenUser, users])
 
   const submitPost = async (event) => {
     try {
@@ -143,7 +147,7 @@ export default function App() {
           {
             method: 'PATCH',
             headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ reply: { username: choosenUser, post: postInput.value } })
+            body: JSON.stringify({ reply: { userID: choosenUser._id, post: postInput.value } })
           }
       const res = await fetch(`${url}/${id}`, requestOptions);
       if (!res.status === 200) throw new Error('Could not update post, try again later')
@@ -175,8 +179,6 @@ export default function App() {
       }
       const res = await fetch(`${url}/user/${id}`, requestOptions);
       if (!res.status === 200) throw new Error('Could not update post, try again later')
-      const updatedUser = await res.json();
-      setChoosenUser(updatedUser.user);
       setLoading(true);
     }
     catch (err) {
@@ -187,20 +189,19 @@ export default function App() {
 
   }
 
-  ////// BYTT UT USERNAME MED USER-ID DETTE GJØR AT MAN KAN BYTTE NAVN UTEN AT MAN MISTER POSTS
-  //// TEST TEST TEST
   const postsElements = !loading
     ?
-    backEndData.map(item => {
+    backEndData.map(post => {
       return (
         < Posts
-          key={item._id}
-          id={item._id}
-          username={item.username}
+          key={post._id}
+          id={post._id}
+          postUserId={post.userID}
           choosenUserName={choosenUser.username}
           choosenUserId={choosenUser._id}
-          post={item.post}
-          replies={item.replies}
+          choosenUserImg={choosenUser.img}
+          post={post.post}
+          replies={post.replies}
           handleDeletePost={deletePost}
           handleUpdatePost={updatePost}
           maxPostLength={maxPostLength}

@@ -1,11 +1,12 @@
 import React from 'react'
 import ReplyForm from '../components/ReplyForm';
+import Replies from '../components/Replies';
 
 export default function Posts(props) {
-    let loggedIn = false;
-    for (const item of props.users) {
-        if (props.username === item.username) {
-            loggedIn = item.loggedIn;
+    let postUser = {}
+    for (const user of props.users) {
+        if (props.postUserId === user._id) {
+            postUser = user;
         }
     }
 
@@ -17,32 +18,24 @@ export default function Posts(props) {
             props.handleError(`Too many characters, max amount is: ${props.maxPostLength}`)
         }
     }
-    const showReplyForm = () => {
-        setReplying(prevReplying => !prevReplying);
-    }
 
-    const showHideReplies = () => {
-
-        setShowReplies(prev => !prev);
-    }
-
-    const replyElements = props.replies ? props.replies.map(reply => {
+    const replyElements = props.replies.map(reply => {
         return (
-            <div className="replyContainer" style={{ display: showReplies ? 'flex' : 'none' }} key={reply._id}>
-                <h5 className="replyContainer--username">{reply.username}:
-
-                </h5>
-                <p className="replyContainer--postText">{reply.post}</p>
-            </div>
+            <Replies
+                replyUserId={reply.userID}
+                post={reply.post}
+                id={reply.id}
+                key={reply.id}
+                users={props.users}
+            />
         )
     })
-        :
-        <div></div>
+
 
     return (
         <div className="postContainer" onChange={props.resetErrorHandler}>
-            <h3 className="postContainer--username">{props.username}:
-                <span className="postContainer--logInStatus" style={{ color: loggedIn ? 'green' : 'red' }}> ●</span>
+            <h3 className="postContainer--username"> {postUser.username}:
+                <span className="postContainer--logInStatus" style={{ color: postUser.loggedIn ? 'green' : 'red' }}> ●</span>
             </h3>
             {
                 !updating
@@ -54,9 +47,9 @@ export default function Posts(props) {
             }
             <div className="postContainer--buttons">
                 {
-                    props.username === props.choosenUserName
+                    props.postUserId === props.choosenUserId
                     &&
-                    <div>
+                    <div className="deleteEditReplyButtons">
                         <button onClick={() => props.handleDeletePost(props.id)}> 🗑
                         </button>
                         {
@@ -68,24 +61,25 @@ export default function Posts(props) {
                         }
                     </div>
                 }
-                <button onClick={showReplyForm}> 📣</button>
+                <button onClick={() => setReplying(prevReplying => !prevReplying)}> 📣</button>
             </div>
             {replying &&
                 <ReplyForm
                     handleUpdatePost={props.handleUpdatePost}
                     maxPostLength={props.maxPostLength}
                     id={props.id}
+                    img={props.choosenUserImg}
 
                 />
             }
             {props.replies.length > 0 &&
                 <div>
 
-                    <button onClick={showHideReplies} className="showHide--button">{showReplies ? 'Hide replies' : 'Show replies'}</button>
+                    <button onClick={() => setShowReplies(prev => !prev)} className="showHide--button">{showReplies ? 'Hide replies' : 'Show replies'}</button>
                 </div>
             }
             {
-                replyElements
+                showReplies && replyElements
 
             }
         </div >
