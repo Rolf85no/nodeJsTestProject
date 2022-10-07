@@ -18,6 +18,7 @@ body{
   background-color: hsl(150, 70%, 90%);
   margin: 0;
   color: var(--text-black);
+  font-size: 1.25rem;
 }
 
 .navbar{
@@ -88,6 +89,8 @@ button:hover{
 
 .postForm--image{
   height: calc(2rem + 1vw);
+  width: 15%;
+  object-fit: cover;
   border-radius: 25%;
   cursor: pointer;
 }
@@ -103,13 +106,29 @@ select{
   font-weight: bold;
 }
 
+.usersContainer--userProfile{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+}
+
+.usersContainer--userProfile--image{
+  height: calc(2rem + 1vw);
+  width: 25%;
+  object-fit: cover;
+  border-radius: 25%;
+  margin-right: 15%;
+}
+
 .postForm--button{
   width: calc(4rem + 1vw);
-  height: calc(1.25rem + 1vw);
+  height: calc(2rem + 1vw);
 }
 
 .postForm input{
   width: 70%;
+  height: calc(2rem + 1vw);
   margin: 0 auto;
 }
 
@@ -120,7 +139,7 @@ input, textarea{
   padding: 4px;
 }
 
-.postContainer, .usersContainer{
+.postContainer{
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -133,9 +152,7 @@ input, textarea{
 }
 
 .usersContainer{
-  margin-top: 18px;
-  padding: 8px;
-  width: 20%;
+  display: none;
 }
 
 .userProfile{
@@ -172,15 +189,16 @@ input, textarea{
 }
 
 .postContainer--buttons button{
-  width: calc(2rem + 1vw);
-  height: calc(1.5rem + 1vw);
-  font-size: 12px;
+  width: calc(3rem + 1vw);
+  height: calc(2rem + 1vw);
+  font-size: calc(1rem + 1vw);
   margin: 0 4px;
   background-color: transparent;
   border: 2px solid lightgray;
 }
 .showHide--button{
   width: calc(8rem + 1vw);
+  height: calc(2rem + 1vw);
   margin-bottom: 18px;
   background-color: transparent;
   color: var(--text-black);
@@ -244,11 +262,25 @@ input, textarea{
   width: 20%;
 }
 
+
 @media screen and ( min-width: 500px) {
   .postsAndPostFormcontainer {
     width: 50%;
     margin: 0 auto;
   }
+  .usersContainer{
+    display: flex;
+    flex-direction: column;
+    border: var(--lightgreyBorder1px);
+    border-radius: 5px;
+    box-shadow: var( --box-shadow-container);
+    margin: 8px auto;
+    background-color: var(--white-bgColor);
+    margin-top: 18px;
+    padding: 8px;
+    width: 20%;
+  }
+
 
   .postForm{
     width: 90%;

@@ -4,9 +4,9 @@ import React from 'react'
 export default function Users(props) {
     const userElements = props.users.map(user => {
         return (
-            <div className="userProfile">
-                <img src={user.img ? user.img : props.defaultImage} alt="profile"></img>
-                <h4> {user.username}</h4>
+            <div className="usersContainer--userProfile">
+                <img src={user.img ? user.img : props.defaultImage} alt="profile" className="usersContainer--userProfile--image"></img>
+                <h4> {user.username} <span className="postContainer--logInStatus" style={{ color: user.loggedIn ? 'green' : 'red' }}> ●</span></h4>
 
             </div>
 
@@ -14,8 +14,8 @@ export default function Users(props) {
         )
     })
     return (
-        <section className="usersContainer">
+        <div className="usersContainer">
             {userElements}
-        </section>
+        </div>
     )
 }

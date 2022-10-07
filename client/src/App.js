@@ -5,6 +5,8 @@ import PostForm from './components/PostForm'
 import Users from './components/Users'
 import ErrorMessage from './components/ErrorMessage';
 import Login from './components/LogIn';
+import { checkLogin_RegisterUser_Logout } from './proxies/checkLogin_RegisterUser_Logout';
+import { fetchUsersAndPosts } from './proxies/fetchUsersAndPosts';
 
 export default function App() {
   const [backEndData, setBackEndData] = React.useState(null);
@@ -23,29 +25,17 @@ export default function App() {
       event.preventDefault();
       const username = document.querySelector('#logIn--username');
       const password = document.querySelector('#logIn--password');
-      if (!username.value && !password.value) return writeError('Please write username and password')
-
+      console.log(password.value)
+      if (!username.value || !password.value) return writeError('Please write username and password')
       const requestOptions = {
-        method: 'POST',
+        method: event.target.name,
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({ username: username.value, password: password.value, loggedIn: true })
       }
-
-      if (event.target.name === 'login') {
-        const res = await fetch(`${url}/login`, requestOptions)
-        const apiData = await res.json();
-        if (!apiData.userFound) return writeError('Can`t find password or username')
-      }
-      else {
-        const res = await fetch(`${url}/register`, requestOptions)
-        const apiData = await res.json();
-        if (apiData.userFound) return writeError('Username already taken')
-      }
-      users.forEach(user => {
-        if (user.username === username.value) setChoosenUser(user);
-      })
+      const response = await checkLogin_RegisterUser_Logout(requestOptions, `${url}/login`);
+      if (!response.success) return writeError(response.message);
+      setChoosenUser(response.user);
       setLoggedIn(true);
-      setLoading(true);
     }
     catch (error) {
       console.log(error)
@@ -53,78 +43,88 @@ export default function App() {
 
   }
 
-  const logOut = () => {
+  const logOut = async () => {
     const requestOptions = {
       method: 'PATCH',
       headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({ username: choosenUser.username, loggedIn: false })
+      body: JSON.stringify({ username: choosenUser.username })
     }
-
-    fetch(url, requestOptions)
+    const response = await checkLogin_RegisterUser_Logout(requestOptions, `${url}/logout`);
+    if (!response.success) return writeError(response.message);
     setLoggedIn(false)
   }
 
-  React.useEffect(() => {
-    if (!loading) return
-    const getUsers = async () => {
-      try {
-
-        const resPosts = await fetch(url);
-        if (!resPosts.status === 200) return writeError('Could not connect API');
-        const apiData = await resPosts.json();
-        setBackEndData(apiData.posts);
-        setUsers(apiData.users);
-        if (choosenUser) {
-          apiData.users.forEach(user => {
-            user._id === choosenUser._id && setChoosenUser(user);
-          })
-        }
+  const getUsersAndPosts = async () => {
+    try {
+      setLoading(true);
+      const requestOptions = {
+        method: 'GET'
       }
-      catch (err) {
-        console.log(err);
-        setBackEndData(null)
-        writeError('Could not connect with database')
-      }
-      finally {
-        setLoading(false);
+      const resPosts = await fetchUsersAndPosts(requestOptions, url);
+      if (!resPosts.success) return writeError(resPosts.message);
+      const apiData = await resPosts;
+      setBackEndData(apiData.posts);
+      setUsers(apiData.users);
+      if (choosenUser) {
+        apiData.users.forEach(user => {
+          user._id === choosenUser._id && setChoosenUser(user);
+        })
       }
     }
+    catch (err) {
+      console.log(err);
+      setBackEndData(null)
+      writeError('Could not connect with database')
+    }
+    finally {
+      setLoading(false);
+    }
+  }
 
-    getUsers();
-  }, [loading, choosenUser, users])
+
+  React.useEffect(() => {
+    getUsersAndPosts();
+  }, [])
+
 
   const submitPost = async (event) => {
     try {
+      setLoading(true);
       event.preventDefault();
-      const username = choosenUser.username;
       const post = document.querySelector('.postForm--postText');
-
+      if (!post.value) {
+        writeError('Please write something')
+      }
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ username: username, post: post.value, userID: choosenUser._id })
+        body: JSON.stringify({ username: choosenUser.username, post: post.value, userID: choosenUser._id })
       }
-      if (!post.value) {
-        throw new Error('Please write something')
-      }
-      const res = await fetch(url, requestOptions);
-      if (!res.status === 200) throw new Error('Something went wrong');
+      const res = await fetchUsersAndPosts(requestOptions, url);
+      if (!res.success) return writeError(res.message);
       post.value = '';
-      setLoading(true);
+      setLoading(false);
+      getUsersAndPosts();
 
     }
     catch (err) {
       console.log(err)
-      setLoading(false)
+      setLoading(true)
       setError(err.message)
     }
   }
 
   const deletePost = async (id) => {
     try {
+      const requestOptions = {
+        method: 'DELETE',
+        headers: { 'Content-type': 'application/json' },
+      }
       setLoading(true);
-      const res = await fetch(`${url}/${id}`, { method: 'DELETE' });
-      if (!res.status === 200) throw new Error('Something went wrong');
+      const res = await fetchUsersAndPosts(requestOptions, `${url}/${id}`,);
+      if (!res.success) return writeError(res.message);
+      setLoading(false);
+      getUsersAndPosts();
     }
     catch (err) {
       console.log(err)
@@ -151,9 +151,10 @@ export default function App() {
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({ reply: { userID: choosenUser._id, post: postInput.value } })
           }
-      const res = await fetch(`${url}/${id}`, requestOptions);
+
+      const res = await fetchUsersAndPosts(requestOptions, `${url}/${id}`);
       if (!res.status === 200) throw new Error('Could not update post, try again later')
-      setLoading(true);
+      getUsersAndPosts();
     }
     catch (err) {
       console.log(err)
@@ -174,15 +175,17 @@ export default function App() {
       const img = document.querySelector('.imgInput');
       const username = document.querySelector('#updateUsername');
       if (!img.value && !username.value) return
+
       const requestOptions =
       {
         method: 'PATCH',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({ username: username.value ? username.value : choosenUser.username, img: img.value ? img.value : choosenUser.img })
       }
-      const res = await fetch(`${url}/user/${id}`, requestOptions);
-      if (!res.status === 200) throw new Error('Could not update post, try again later')
-      setLoading(true);
+
+      const res = await fetchUsersAndPosts(requestOptions, `${url}/user/${id}`);
+      if (!res.success) writeError(res.message);
+      getUsersAndPosts();
     }
     catch (err) {
       setLoading(false);
