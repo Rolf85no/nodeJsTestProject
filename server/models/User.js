@@ -10,7 +10,8 @@ const UserSchema = new mongoose.Schema({
         required: true,
     },
     loggedIn: {
-        type: Boolean
+        type: Boolean,
+        default: false,
     },
     img: {
         type: String

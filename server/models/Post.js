@@ -7,7 +7,7 @@ const PostSchema = new mongoose.Schema({
     {
         type: String, required: [true],
         trim: true,
-        maxlength: [20]
+        maxlength: [25]
     },
     post: {
         type: String,
@@ -15,8 +15,9 @@ const PostSchema = new mongoose.Schema({
         maxlength: [150]
     },
     replies: [{
-        username: {
+        userID: {
             type: String,
+            trim: true
         },
         post: {
             type: String,

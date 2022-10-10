@@ -1,0 +1,31 @@
+import React from "react";
+
+export default function BurgerMenu(props) {
+    const linksList = React.useRef(null);
+    const showLinks = () => {
+        const burgerLines = document.querySelector('.burgerMenu--ul');
+        if (linksList.current.classList.contains('hidden')) {
+            linksList.current.classList.remove('hidden');
+            burgerLines.classList.add('cross');
+        }
+        else {
+            linksList.current.classList.add('hidden')
+            burgerLines.classList.remove('cross');
+
+        }
+        ;
+    }
+    return (
+        <section className="burgerMenu">
+            <ul onClick={showLinks} className="burgerMenu--ul">
+                <li className="burgerMenu--lines"></li>
+                <li className="burgerMenu--lines"></li>
+                <li className="burgerMenu--lines"></li>
+            </ul>
+            <ul className="burgerMenu--linksList hidden" ref={linksList}>
+                <li className="burgerMenu--linksList--links">Edit profile</li>
+                <li className="burgerMenu--linksList--links" onClick={props.handleLogout}>Logout </li>
+            </ul>
+        </section>
+    )
+}

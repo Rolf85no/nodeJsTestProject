@@ -16,8 +16,8 @@ export default function LogIn(props) {
                 <input name="logIn--password" type="password" ref={inputPassword} id="logIn--password" />
             </div>
             <div className="login--buttons">
-                <button className="logIn--button" name="login" onClick={props.handleLogin}> Log In</button>
-                <button className="logIn--button" name="register" onClick={props.handleLogin}> Register</button>
+                <button className="logIn--button" name="PATCH" onClick={props.handleLogin}> Log In</button>
+                <button className="logIn--button" name="POST" onClick={props.handleLogin}> Register</button>
             </div>
 
         </form>

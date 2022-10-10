@@ -1,4 +1,5 @@
 import React from "react";
+import UpdateUserForm from "./UpdateUserForm";
 
 export default function PostForm(props) {
     const [editing, setEditing] = React.useState(false);
@@ -8,19 +9,15 @@ export default function PostForm(props) {
         }
     }
 
-    const handleUpdateUserSubmit = () => {
-        props.handleUpdateUser(props.id)
+    const toggleEditing = () => {
+        setEditing(prevState => !prevState)
     }
 
     return (
         !editing
             ?
-
             <div className="postForm">
-                <div>
-                    <img src={props.img} className="postForm--image" alt="profile"></img>
-                    <button onClick={() => setEditing(true)}> Edit user</button>
-                </div>
+                <img src={props.img} className="postForm--image" alt="profile" onClick={toggleEditing}></img>
 
                 <form onChange={props.resetErrorHandler} className="postForm--form" onSubmit={props.handleSubmit}>
                     <input
@@ -39,19 +36,13 @@ export default function PostForm(props) {
             </div >
 
             :
+            <UpdateUserForm
+                id={props.id}
+                toggleEditing={toggleEditing}
+                username={props.username}
+                handleUpdateUser={props.handleUpdateUser}
 
-            <form className="postForm updateUser">
-                <label htmlFor="imgLink">Image-link:</label>
-                <input name="imgLink" className="imgInput updateUser">
-                </input>
-                <label htmlFor="username">Username:</label>
-                <input name="username" className="username updateUser" id="updateUsername" placeholder={props.username}></input>
-                <button className="postForm--button" type="button" onClick={() => { handleUpdateUserSubmit(); setEditing(false); }}>
-                    Save
-                </button>
-
-            </form >
-
+            />
 
     )
 }

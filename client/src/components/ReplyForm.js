@@ -14,8 +14,8 @@ export default function ReplyForm(props) {
     }
 
     return (
-        <div className="postForm" style={{ backgroundColor: 'lightgrey', width: '100%' }}>
-            <img src={props.img ? props.img : "https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg"} className="postForm--image" alt="profile"></img>
+        <div className="postForm replyForm">
+            <img src={props.img} className="postForm--image" alt="profile"></img>
             <form
                 onChange={props.resetErrorHandler}
                 className="postForm--form reply"
