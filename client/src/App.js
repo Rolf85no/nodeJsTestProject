@@ -25,7 +25,6 @@ export default function App() {
       event.preventDefault();
       const username = document.querySelector('#logIn--username');
       const password = document.querySelector('#logIn--password');
-      console.log(password.value)
       if (!username.value || !password.value) return writeError('Please write username and password')
       const requestOptions = {
         method: event.target.name,

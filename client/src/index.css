@@ -3,10 +3,11 @@
 }
 
 :root{
-  --box-shadow-container: 1px 1px 2px 1px hsl(200, 20%,0% );
+  --box-shadow-container: 1px 1px 2px 1px rgba(0, 0, 0, 0.254);
   --box-shadow-inputs: 1px 1px 0px 1px hsl(200, 20%,70% );
-  --button-bgColor:  hsl(175, 100%,20%);
+  --darkGreen-bgColor:  hsl(175, 100%,20%);
   --lightgreyBorder1px: 1px lightgrey solid;
+  --darkgreyBorder1px: 1px darkgrey solid;
 
   --button-textColor:  hsl(200, 90%, 100%);
   --text-black: hsl(200, 90%, 0%);
@@ -15,14 +16,14 @@
 
 body{
   text-align: center;
-  background-color: hsl(150, 70%, 90%);
+  background-color: hsl(175, 90%, 95%);
   margin: 0;
   color: var(--text-black);
   font-size: 1.25rem;
 }
 
 .navbar{
-  background-color: var(--button-bgColor);
+  background-color: var(--darkGreen-bgColor);
   color:  var(--button-textColor);
   width: 100%;
   height: 48px;
@@ -34,6 +35,7 @@ body{
 
 .navbar h3{
   margin-left: 24px;
+  letter-spacing: 2px;
 }
 
 
@@ -42,14 +44,19 @@ body{
   margin-bottom: 0;
 }
 
+ul{
+  list-style-type: none;
+}
+
 button{
-  background-color: var(--button-bgColor);
+  background-color: var(--darkGreen-bgColor);
   color: var(--button-textColor);
   border: transparent;
   box-shadow: var( --box-shadow-inputs);
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
+  letter-spacing: 1px;
 }
 
 main{
@@ -58,15 +65,13 @@ main{
 }
 
 .navbar--logout{
-  margin-right: 16px;
-  width: calc(4rem + 1vw);
-  height: 60%;
+  display: none;
 }
 
 
 button:hover{
   background-color: var(--button-textColor);
-  color: var(--button-bgColor);
+  color: var(--darkGreen-bgColor);
 
 }
 
@@ -100,7 +105,7 @@ select{
   border: transparent;
   box-shadow: var( --box-shadow-inputs);
   color: var(--button-textColor);
-  background-color: var(--button-bgColor);
+  background-color: var(--darkGreen-bgColor);
   padding: 4px;
   margin: 8px;
   font-weight: bold;
@@ -121,9 +126,13 @@ select{
   margin-right: 15%;
 }
 
-.postForm--button{
+.postForm--button, .updateUser--button{
   width: calc(4rem + 1vw);
   height: calc(2rem + 1vw);
+}
+
+.updateUser--button{
+  margin-top: 8px;
 }
 
 .postForm input{
@@ -144,7 +153,7 @@ input, textarea{
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: var(--lightgreyBorder1px);
+  border: var(--darkgreyBorder1px);
   border-radius: 5px;
   box-shadow: var( --box-shadow-container);
   margin: 8px auto;
@@ -194,7 +203,7 @@ input, textarea{
   font-size: calc(1rem + 1vw);
   margin: 0 4px;
   background-color: transparent;
-  border: 2px solid lightgray;
+  border: var(--lightgreyBorder1px);
 }
 .showHide--button{
   width: calc(8rem + 1vw);
@@ -262,6 +271,67 @@ input, textarea{
   width: 20%;
 }
 
+.burgerMenu{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  background-color: var(--darkGreen-bgColor);
+  display: flex;
+  flex-direction: column;
+}
+
+.burgerMenu--ul{
+  margin: 0;
+  padding: 0;
+}
+
+.burgerMenu--lines{
+  background-color: var(--white-bgColor);
+  width: 20%;
+  height: 4px;
+  margin: 8px auto;
+}
+
+.cross{
+  margin-top: 8px;
+}
+
+.cross :first-child{
+  transform: rotate(-45deg) translate(-8px, 9px);
+}
+
+.cross :nth-child(2){
+  opacity: 0;
+}
+
+.cross :nth-child(3){
+  transform: rotate(45deg) translate(-8px, -9px);
+}
+
+.burgerMenu--linksList{
+  margin-top: 16px;
+  padding: 0;
+}
+
+.burgerMenu--linksList--links{
+  cursor: pointer;
+  margin-bottom: 24px;
+  font-size: calc(0.75rem + 1vw);
+  text-decoration: underline;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+}
+
+.updateUser--button-close{
+  align-self: flex-start;
+  width: calc(1.5rem + 1vw);
+  height: calc(1rem + 1vw);
+  border: none;
+  text-align: center;
+}
+
 
 @media screen and ( min-width: 500px) {
   .postsAndPostFormcontainer {
@@ -284,5 +354,18 @@ input, textarea{
 
   .postForm{
     width: 90%;
+  }
+
+  .burgerMenu{
+    display: none;
+  }
+
+  .navbar--logout{
+    margin-right: 16px;
+    width: calc(4rem + 1vw);
+    height: 60%;
+    background-color: var(--white-bgColor);
+    color: var(--darkGreen-bgColor);
+    display: block;
   }
 }
