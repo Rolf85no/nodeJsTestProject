@@ -69,10 +69,15 @@ main{
 }
 
 
-button:hover{
+button:not([disabled]):hover{
   background-color: var(--button-textColor);
   color: var(--darkGreen-bgColor);
 
+}
+
+button:disabled{
+  cursor: none;
+  opacity: 0.5;
 }
 
 .postForm{
@@ -115,7 +120,7 @@ select{
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
 }
 
 .usersContainer--userProfile--image{

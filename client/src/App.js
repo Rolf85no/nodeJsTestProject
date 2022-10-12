@@ -20,21 +20,13 @@ export default function App() {
   const defaultImage = 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg';
   const [error, setError] = React.useState(null);
 
-  const logIn = async (event) => {
+  const logIn = async (requestBody, methodType) => {
     try {
-      event.preventDefault();
-      const username = document.querySelector('#logIn--username');
-      const password = document.querySelector('#logIn--password');
-      if (!username.value || !password.value) return writeError('Please write username and password')
-      const requestOptions = {
-        method: event.target.name,
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ username: username.value, password: password.value, loggedIn: true })
-      }
-      const response = await checkLogin_RegisterUser_Logout(requestOptions, `${url}/login`);
+      const response = await checkLogin_RegisterUser_Logout(`${url}/login`, requestBody, methodType);
       if (!response.success) return writeError(response.message);
       setChoosenUser(response.user);
       setLoggedIn(true);
+      getUsersAndPosts();
     }
     catch (error) {
       console.log(error)
@@ -42,13 +34,10 @@ export default function App() {
 
   }
 
-  const logOut = async () => {
-    const requestOptions = {
-      method: 'PATCH',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({ username: choosenUser.username })
-    }
-    const response = await checkLogin_RegisterUser_Logout(requestOptions, `${url}/logout`);
+  const logOut = async (event) => {
+    const methodType = event.target.name;
+    const requestBody = { username: choosenUser.username }
+    const response = await checkLogin_RegisterUser_Logout(`${url}/logout`, requestBody, methodType);
     if (!response.success) return writeError(response.message);
     setLoggedIn(false)
   }
@@ -59,16 +48,11 @@ export default function App() {
       const requestOptions = {
         method: 'GET'
       }
-      const resPosts = await fetchUsersAndPosts(requestOptions, url);
+      const resPosts = await fetchUsersAndPosts(url, requestOptions);
       if (!resPosts.success) return writeError(resPosts.message);
       const apiData = await resPosts;
       setBackEndData(apiData.posts);
       setUsers(apiData.users);
-      if (choosenUser) {
-        apiData.users.forEach(user => {
-          user._id === choosenUser._id && setChoosenUser(user);
-        })
-      }
     }
     catch (err) {
       console.log(err);
@@ -80,28 +64,15 @@ export default function App() {
     }
   }
 
-
-  React.useEffect(() => {
-    getUsersAndPosts();
-  }, [])
-
-
-  const submitPost = async (event) => {
+  const submitPost = async (post) => {
     try {
-      setLoading(true);
-      event.preventDefault();
-      const post = document.querySelector('.postForm--postText');
-      if (!post.value) {
-        writeError('Please write something')
-      }
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ username: choosenUser.username, post: post.value, userID: choosenUser._id })
+        body: JSON.stringify({ username: choosenUser.username, post: post, userID: choosenUser._id })
       }
-      const res = await fetchUsersAndPosts(requestOptions, url);
+      const res = await fetchUsersAndPosts(url, requestOptions);
       if (!res.success) return writeError(res.message);
-      post.value = '';
       setLoading(false);
       getUsersAndPosts();
 
@@ -120,7 +91,7 @@ export default function App() {
         headers: { 'Content-type': 'application/json' },
       }
       setLoading(true);
-      const res = await fetchUsersAndPosts(requestOptions, `${url}/${id}`,);
+      const res = await fetchUsersAndPosts(`${url}/${id}`, requestOptions);
       if (!res.success) return writeError(res.message);
       setLoading(false);
       getUsersAndPosts();
@@ -132,26 +103,19 @@ export default function App() {
   }
 
 
-  const updatePost = async (id, updateOrReply) => {
+  const updatePost = async (post, id, updateOrReply) => {
     try {
-      const postInput = updateOrReply === 'update' ? document.querySelector('.postContainer--updateInput') : document.querySelector('#replyPost');
-      if (!postInput.value) return
+      if (post.length === 0) return
+      const reqBody = updateOrReply === 'update' ? { post: post } : { reply: { userID: choosenUser._id, post: post } }
       const requestOptions =
-        updateOrReply === 'update' ?
-          {
-            method: 'PATCH',
-            headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ post: postInput.value })
-          }
+      {
+        method: 'PATCH',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(reqBody)
+      }
 
-          :
-          {
-            method: 'PATCH',
-            headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ reply: { userID: choosenUser._id, post: postInput.value } })
-          }
 
-      const res = await fetchUsersAndPosts(requestOptions, `${url}/${id}`);
+      const res = await fetchUsersAndPosts(`${url}/${id}`, requestOptions);
       if (!res.status === 200) throw new Error('Could not update post, try again later')
       getUsersAndPosts();
     }
@@ -182,8 +146,9 @@ export default function App() {
         body: JSON.stringify({ username: username.value ? username.value : choosenUser.username, img: img.value ? img.value : choosenUser.img })
       }
 
-      const res = await fetchUsersAndPosts(requestOptions, `${url}/user/${id}`);
+      const res = await fetchUsersAndPosts(`${url}/user/${id}`, requestOptions);
       if (!res.success) writeError(res.message);
+      setChoosenUser(res.user);
       getUsersAndPosts();
     }
     catch (err) {
@@ -204,7 +169,7 @@ export default function App() {
           postUserId={post.userID}
           choosenUserName={choosenUser.username}
           choosenUserId={choosenUser._id}
-          choosenUserImg={choosenUser.img}
+          choosenUserImg={choosenUser.img ? choosenUser.img : defaultImage}
           post={post.post}
           replies={post.replies}
           handleDeletePost={deletePost}
@@ -220,7 +185,7 @@ export default function App() {
 
     :
 
-    <div> loading </div>
+    <div> loading.. </div>
 
 
   return (

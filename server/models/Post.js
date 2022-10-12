@@ -14,6 +14,10 @@ const PostSchema = new mongoose.Schema({
         trim: true,
         maxlength: [150]
     },
+    userID: {
+        type: String,
+        trim: true
+    },
     replies: [{
         userID: {
             type: String,

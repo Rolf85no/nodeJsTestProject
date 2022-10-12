@@ -8,7 +8,7 @@ export default function Navbar(props) {
             {props.loggedIn && <BurgerMenu
                 handleLogout={props.handleLogout}
             />}
-            {props.loggedIn && <button onClick={props.handleLogout} className="navbar--logout">Log Out</button>}
+            {props.loggedIn && <button onClick={props.handleLogout} className="navbar--logout" name="PATCH">Log Out</button>}
         </nav>
     )
 }

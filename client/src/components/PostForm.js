@@ -3,14 +3,23 @@ import UpdateUserForm from "./UpdateUserForm";
 
 export default function PostForm(props) {
     const [editing, setEditing] = React.useState(false);
+    const [postText, setPostText] = React.useState('');
+
     const handleChange = function (event) {
         if (event.target.value.length >= props.maxPostLength) {
             props.handleError(`Too many characters, max amount is: ${props.maxPostLength}`)
         }
+        setPostText(event.target.value);
     }
 
     const toggleEditing = () => {
         setEditing(prevState => !prevState)
+    }
+
+    const submitPost = (event) => {
+        event.preventDefault();
+        props.handleSubmit(postText);
+        setPostText('');
     }
 
     return (
@@ -19,17 +28,18 @@ export default function PostForm(props) {
             <div className="postForm">
                 <img src={props.img} className="postForm--image" alt="profile" onClick={toggleEditing}></img>
 
-                <form onChange={props.resetErrorHandler} className="postForm--form" onSubmit={props.handleSubmit}>
+                <form onChange={props.resetErrorHandler} className="postForm--form" onSubmit={submitPost}>
                     <input
                         className="postForm--postText"
                         name="postText" type="text"
                         maxLength={props.maxPostLength}
                         onChange={handleChange}
                         aria-label="Your post"
+                        value={postText}
                     >
 
                     </input>
-                    <button className="postForm--button" type="submit">
+                    <button className="postForm--button" type="submit" disabled={postText.length === 0}>
                         Submit
                     </button>
                 </form>
@@ -41,7 +51,6 @@ export default function PostForm(props) {
                 toggleEditing={toggleEditing}
                 username={props.username}
                 handleUpdateUser={props.handleUpdateUser}
-
             />
 
     )

@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Post = require('../models/Post');
 
 const checkLogin = async function (req, res) {
     try {
@@ -44,16 +45,27 @@ const logout = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-    const options = {
-        username: req.body.username,
-        password: req.body.password,
-        img: req.body.img
+    try {
+        const options = {
+            username: req.body.username,
+            password: req.body.password,
+            img: req.body.img
+        }
+        const user = await User.findOneAndUpdate({ _id: req.params.id }, options);
+        if (!user) return res.status(400).json({ success: false, message: `No user found` });
+        await Post.updateMany(
+            { "userID": { $in: req.params.id } },
+            { $set: { "username": req.body.username } },
+            { multi: true }
+        );
+        // let optionsUpdate = { multi: true, upsert: true }
+        // Post.updateMany({ userID: req.params.id }, { username: req.body.username }, optionsUpdate);
+        res.status(200).json({ success: true, message: 'User updated', user });
     }
-    const user = await User.findOneAndUpdate({ _id: req.params.id }, options);
-    if (!user) return res.status(400).json({ success: false, message: `No user found` });
-    res.status(200).json({ success: true, message: 'User updated', user });
 
-
+    catch (err) {
+        console.log(err);
+    }
 }
 
 module.exports = { checkLogin, registerUser, logout, updateUser }

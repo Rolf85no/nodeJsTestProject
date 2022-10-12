@@ -13,10 +13,18 @@ export default function Posts(props) {
     const [updating, setUpdating] = React.useState(false);
     const [replying, setReplying] = React.useState(false);
     const [showReplies, setShowReplies] = React.useState(false);
+    const [editedPost, setEditedPost] = React.useState("")
     const handleChange = function (event) {
         if (event.target.value.length >= props.maxPostLength) {
             props.handleError(`Too many characters, max amount is: ${props.maxPostLength}`)
         }
+        setEditedPost(event.target.value);
+    }
+
+    const updatePost = (e) => {
+        e.preventDefault();
+        setUpdating(prevUpdate => !prevUpdate)
+        props.handleUpdatePost(editedPost, props.id, 'update')
     }
 
     const replyElements = props.replies.map(reply => {
@@ -57,7 +65,7 @@ export default function Posts(props) {
                                 ?
                                 <button onClick={() => setUpdating(prevUpdate => !prevUpdate)}>✒️</button>
                                 :
-                                <button onClick={() => { setUpdating(prevUpdate => !prevUpdate); props.handleUpdatePost(props.id, 'update'); }}>🚀</button>
+                                <button onClick={updatePost} >{editedPost.length > 0 ? '🚀' : '❌'}</button>
                         }
                     </div>
                 }
