@@ -1,19 +1,23 @@
 import React from 'react'
-import ReplyForm from '../components/ReplyForm';
 import Replies from '../components/Replies';
+import PostForm from './PostForm';
 
 export default function Posts(props) {
-    let postUser = {}
-    for (const user of props.users) {
-        if (props.postUserId === user._id) {
-            postUser = user;
-        }
-    }
-
     const [updating, setUpdating] = React.useState(false);
     const [replying, setReplying] = React.useState(false);
     const [showReplies, setShowReplies] = React.useState(false);
     const [editedPost, setEditedPost] = React.useState("")
+    const [postUser, setPostUser] = React.useState("")
+
+    React.useEffect(() => {
+        for (const user of props.users) {
+            if (props.postUserId === user._id) {
+                setPostUser(user);
+            }
+        }
+    }, [props.users, props.postUserId])
+
+
     const handleChange = function (event) {
         if (event.target.value.length >= props.maxPostLength) {
             props.handleError(`Too many characters, max amount is: ${props.maxPostLength}`)
@@ -32,8 +36,8 @@ export default function Posts(props) {
             <Replies
                 replyUserId={reply.userID}
                 post={reply.post}
-                id={reply.id}
-                key={reply.id}
+                id={reply._id}
+                key={reply._id}
                 users={props.users}
             />
         )
@@ -50,34 +54,49 @@ export default function Posts(props) {
                     ?
                     <p className="postContainer--postText">{props.post}</p>
                     :
-                    <textarea placeholder={props.post} className="postContainer--updateInput" type="text" name="postText" maxLength={props.maxPostLength} onChange={handleChange} />
+                    <textarea
+                        placeholder={props.post}
+                        className="postContainer--updateInput"
+                        type="text"
+                        name="postText"
+                        maxLength={props.maxPostLength}
+                        onChange={handleChange}
+                    />
 
             }
             <div className="postContainer--buttons">
                 {
                     props.postUserId === props.choosenUserId
                     &&
+
                     <div className="deleteEditReplyButtons">
-                        <button onClick={() => props.handleDeletePost(props.id)}> 🗑
-                        </button>
                         {
                             !updating
                                 ?
-                                <button onClick={() => setUpdating(prevUpdate => !prevUpdate)}>✒️</button>
+                                <div>
+                                    <button onClick={() => props.handleDeletePost(props.id)}> 🗑
+                                    </button>
+
+                                    <button onClick={() => setUpdating(prevUpdate => !prevUpdate)}>✒️</button>
+                                </div>
                                 :
                                 <button onClick={updatePost} >{editedPost.length > 0 ? '🚀' : '❌'}</button>
                         }
+
                     </div>
+
                 }
-                <button onClick={() => setReplying(prevReplying => !prevReplying)}> 📣</button>
+                {!updating && <button onClick={() => setReplying(prevReplying => !prevReplying)}> 📣</button>}
             </div>
             {replying &&
-                <ReplyForm
-                    handleUpdatePost={props.handleUpdatePost}
+                <PostForm
+                    handleSubmit={props.handleUpdatePost}
                     maxPostLength={props.maxPostLength}
-                    id={props.id}
                     img={props.choosenUserImg}
-
+                    typeOfPost="Reply"
+                    username={props.choosenUserName}
+                    choosenUserId={props.choosenUserId}
+                    postId={props.id}
                 />
             }
             {props.replies.length > 0 &&

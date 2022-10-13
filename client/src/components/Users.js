@@ -1,6 +1,4 @@
 import React from 'react'
-
-
 export default function Users(props) {
     const userElements = props.users.map(user => {
         return (
@@ -9,8 +7,6 @@ export default function Users(props) {
                 <h4> {user.username} <span className="postContainer--logInStatus" style={{ color: user.loggedIn ? 'green' : 'red' }}> ●</span></h4>
 
             </div>
-
-
         )
     })
     return (

@@ -13,6 +13,7 @@ export default function LogIn(props) {
     }
 
     const handleChange = (event) => {
+        props.resetErrorHandler()
         if (event.target.name === "logIn--username") setUsername(event.target.value)
         if (event.target.name === "logIn--password") setPassword(event.target.value)
     }

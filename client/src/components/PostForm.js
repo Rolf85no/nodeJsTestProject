@@ -18,13 +18,21 @@ export default function PostForm(props) {
 
     const submitPost = (event) => {
         event.preventDefault();
-        props.handleSubmit(postText);
+        if (props.typeOfPost === "Post") props.handleSubmit(postText);
+        else props.handleSubmit(postText, props.postId, 'reply');
         setPostText('');
     }
 
     return (
-        !editing
+        editing && props.typeOfPost === "Post"
             ?
+            <UpdateUserForm
+                id={props.id}
+                toggleEditing={toggleEditing}
+                username={props.username}
+                handleUpdateUser={props.handleUpdateUser}
+            />
+            :
             <div className="postForm">
                 <img src={props.img} className="postForm--image" alt="profile" onClick={toggleEditing}></img>
 
@@ -44,14 +52,6 @@ export default function PostForm(props) {
                     </button>
                 </form>
             </div >
-
-            :
-            <UpdateUserForm
-                id={props.id}
-                toggleEditing={toggleEditing}
-                username={props.username}
-                handleUpdateUser={props.handleUpdateUser}
-            />
 
     )
 }

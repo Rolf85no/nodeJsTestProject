@@ -11,6 +11,7 @@ const checkLogin = async function (req, res) {
     }
     catch (err) {
         console.log(err)
+        return res.status(400).json({ success: false, message: err.message })
     }
 
 }
