@@ -35,7 +35,6 @@ export default function PostForm(props) {
             :
             <div className="postForm">
                 <img src={props.img} className="postForm--image" alt="profile" onClick={toggleEditing}></img>
-
                 <form onChange={props.resetErrorHandler} className="postForm--form" onSubmit={submitPost}>
                     <input
                         className="postForm--postText"

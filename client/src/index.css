@@ -19,7 +19,7 @@ body{
   background-color: hsl(175, 90%, 95%);
   margin: 0;
   color: var(--text-black);
-  font-size: 1.25rem;
+
 }
 
 .navbar{
@@ -97,12 +97,27 @@ button:disabled{
   align-items: center;
 }
 
-.postForm--image{
+.postForm--image, .postContainer--info--image{
   height: calc(2rem + 1vw);
-  width: 15%;
   object-fit: cover;
   border-radius: 25%;
   cursor: pointer;
+}
+
+.postContainer--info--image{
+  height: calc(1rem + 1vw);
+  margin-right: 8px;
+  cursor: none;
+}
+.postContainer--info--username{
+  margin: 8px 0;
+}
+
+.postContainer--info{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
 }
 
 select{
@@ -192,27 +207,27 @@ input, textarea{
 }
 
 .replyContainer--username{
-  margin: 4px 0;
+  margin: 4px 0 0;
   font-size: 1rem;
 }
 
 .replyContainer--postText{
   margin: 0;
-  padding: 4px 0;
+  padding: 4px 8px;
   font-size: 0.8rem;
 }
 
 .postContainer--buttons button{
-  width: calc(3rem + 1vw);
-  height: calc(2rem + 1vw);
-  font-size: calc(1rem + 1vw);
+  width: calc(5rem + 1vw);
+  height: calc(1.5rem + 1vw);
   margin: 0 4px;
   background-color: transparent;
   border: var(--lightgreyBorder1px);
+  color: var(--text-black);
 }
 .showHide--button{
   width: calc(8rem + 1vw);
-  height: calc(2rem + 1vw);
+  height: calc(1.5rem + 1vw);
   margin-bottom: 18px;
   background-color: transparent;
   color: var(--text-black);
@@ -258,6 +273,7 @@ input, textarea{
   margin: 8px;
   width: 90%;
 }
+
 .updateUser{
   flex-direction: column;
   margin-bottom: 18px;

@@ -62,6 +62,7 @@ export default function App() {
     setLoading(true);
     const res = await fetchUsersAndPosts(url, requestOptions);
     if (!res.success) { setLoading(false); return writeError(res.message) };
+
     getUsersAndPosts();
 
   }
@@ -73,7 +74,7 @@ export default function App() {
     }
     setLoading(true);
     const res = await fetchUsersAndPosts(`${url}/${id}`, requestOptions);
-    if (!res.success) return setLoading(false); writeError(res.message);
+    if (!res.success) { setLoading(false); return writeError(res.message) };
     getUsersAndPosts();
 
   }
@@ -132,6 +133,7 @@ export default function App() {
           choosenUserName={choosenUser.username}
           choosenUserId={choosenUser._id}
           choosenUserImg={choosenUser.img ? choosenUser.img : defaultImage}
+          defaultImage={defaultImage}
           post={post.post}
           replies={post.replies}
           handleDeletePost={deletePost}
@@ -143,7 +145,7 @@ export default function App() {
           handleSubmit={submitPost}
         />
       )
-    })
+    }).reverse()
 
     :
 

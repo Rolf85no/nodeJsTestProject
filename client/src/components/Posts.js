@@ -5,9 +5,9 @@ import PostForm from './PostForm';
 export default function Posts(props) {
     const [updating, setUpdating] = React.useState(false);
     const [replying, setReplying] = React.useState(false);
-    const [showReplies, setShowReplies] = React.useState(false);
+    const [showReplies, setShowReplies] = React.useState(true);
     const [editedPost, setEditedPost] = React.useState("")
-    const [postUser, setPostUser] = React.useState("")
+    const [postUser, setPostUser] = React.useState({})
 
     React.useEffect(() => {
         for (const user of props.users) {
@@ -46,9 +46,13 @@ export default function Posts(props) {
 
     return (
         <div className="postContainer" onChange={props.resetErrorHandler}>
-            <h3 className="postContainer--username"> {postUser.username}:
-                <span className="postContainer--logInStatus" style={{ color: postUser.loggedIn ? 'green' : 'red' }}> ●</span>
-            </h3>
+            <div className="postContainer--info">
+                <div><img src={postUser.img ? postUser.img : props.defaultImage} className="postContainer--info--image" alt="profile"></img></div>
+                <h4 className="postContainer--info--username"> {postUser.username}:
+                    <span className="postContainer--logInStatus" style={{ color: postUser.loggedIn ? 'green' : 'red' }}> ●</span>
+                </h4>
+            </div>
+
             {
                 !updating
                     ?
@@ -74,19 +78,19 @@ export default function Posts(props) {
                             !updating
                                 ?
                                 <div>
-                                    <button onClick={() => props.handleDeletePost(props.id)}> 🗑
+                                    <button onClick={() => props.handleDeletePost(props.id)}> Delete 🗑
                                     </button>
 
-                                    <button onClick={() => setUpdating(prevUpdate => !prevUpdate)}>✒️</button>
+                                    <button onClick={() => setUpdating(prevUpdate => !prevUpdate)}> Edit ✒️</button>
                                 </div>
                                 :
-                                <button onClick={updatePost} >{editedPost.length > 0 ? '🚀' : '❌'}</button>
+                                <button onClick={updatePost} >{editedPost.length > 0 ? 'Submit 🚀' : 'Back ❌'}</button>
                         }
 
                     </div>
 
                 }
-                {!updating && <button onClick={() => setReplying(prevReplying => !prevReplying)}> 📣</button>}
+                {!updating && <button onClick={() => setReplying(prevReplying => !prevReplying)}> Reply 📣</button>}
             </div>
             {replying &&
                 <PostForm
