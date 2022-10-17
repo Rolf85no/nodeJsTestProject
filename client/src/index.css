@@ -38,10 +38,13 @@ body{
   letter-spacing: 2px;
 }
 
+.backEndMessage{
+  position: absolute;
+  top: 32px;
+  opacity: 1;
+  left: 0;
+  right: 0;
 
-
-.errorMessage{
-  margin-bottom: 0;
 }
 
 ul{
@@ -64,6 +67,9 @@ main{
   flex-direction: row;
 }
 
+
+
+
 .navbar--logout{
   display: none;
 }
@@ -78,6 +84,10 @@ button:not([disabled]):hover{
 button:disabled{
   cursor: none;
   opacity: 0.5;
+}
+
+.postsAndPostFormcontainer{
+  margin: 0 auto;
 }
 
 .postForm{
@@ -177,7 +187,9 @@ input, textarea{
   border-radius: 5px;
   box-shadow: var( --box-shadow-container);
   margin: 8px auto;
+  padding: 8px;
   background-color: var(--white-bgColor);
+  
 }
 
 .usersContainer{
@@ -218,7 +230,7 @@ input, textarea{
 }
 
 .postContainer--buttons button{
-  width: calc(5rem + 1vw);
+  width: calc(5.5rem + 1vw);
   height: calc(1.5rem + 1vw);
   margin: 0 4px;
   background-color: transparent;
@@ -256,7 +268,7 @@ input, textarea{
 .logIn{
   display: flex;
   flex-direction: column;
-  margin-top: 32px;
+  margin-top: 16px;
 }
 
 .logIn div{
@@ -288,9 +300,7 @@ input, textarea{
   margin-top: 0;
 }
 
-.somethingContainer{
-  width: 20%;
-}
+
 
 .burgerMenu{
   position: absolute;
@@ -338,11 +348,22 @@ input, textarea{
 .burgerMenu--linksList--links{
   cursor: pointer;
   margin-bottom: 24px;
+
+
+}
+
+.burgerMenu--linksList--links button{
+  border-radius: 0;
+  width: 100%;
+  box-shadow: none;
   font-size: calc(0.75rem + 1vw);
   text-decoration: underline;
   font-weight: 600;
   letter-spacing: 1px;
+}
 
+.somethingContainer{
+  display: none;
 }
 
 .updateUser--button-close{
@@ -359,7 +380,7 @@ input, textarea{
     width: 50%;
     margin: 0 auto;
   }
-  .usersContainer{
+  .usersContainer, .somethingContainer{
     display: flex;
     flex-direction: column;
     border: var(--lightgreyBorder1px);
@@ -371,6 +392,7 @@ input, textarea{
     padding: 8px;
     width: 20%;
   }
+
 
 
   .postForm{

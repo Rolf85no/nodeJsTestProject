@@ -7,7 +7,7 @@ export default function PostForm(props) {
 
     const handleChange = function (event) {
         if (event.target.value.length >= props.maxPostLength) {
-            props.handleError(`Too many characters, max amount is: ${props.maxPostLength}`)
+            props.handleWriteMessage(`Too many characters, max amount is: ${props.maxPostLength}`)
         }
         setPostText(event.target.value);
     }
@@ -35,7 +35,7 @@ export default function PostForm(props) {
             :
             <div className="postForm">
                 <img src={props.img} className="postForm--image" alt="profile" onClick={toggleEditing}></img>
-                <form onChange={props.resetErrorHandler} className="postForm--form" onSubmit={submitPost}>
+                <form onChange={props.resetMessageHandler} className="postForm--form" onSubmit={submitPost}>
                     <input
                         className="postForm--postText"
                         name="postText" type="text"
@@ -43,6 +43,7 @@ export default function PostForm(props) {
                         onChange={handleChange}
                         aria-label="Your post"
                         value={postText}
+                        autoFocus
                     >
 
                     </input>

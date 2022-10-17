@@ -20,7 +20,7 @@ export default function Posts(props) {
 
     const handleChange = function (event) {
         if (event.target.value.length >= props.maxPostLength) {
-            props.handleError(`Too many characters, max amount is: ${props.maxPostLength}`)
+            props.handleWriteMessage(`Too many characters, max amount is: ${props.maxPostLength}`)
         }
         setEditedPost(event.target.value);
     }
@@ -45,7 +45,7 @@ export default function Posts(props) {
 
 
     return (
-        <div className="postContainer" onChange={props.resetErrorHandler}>
+        <div className="postContainer" onChange={props.resetMessageHandler}>
             <div className="postContainer--info">
                 <div><img src={postUser.img ? postUser.img : props.defaultImage} className="postContainer--info--image" alt="profile"></img></div>
                 <h4 className="postContainer--info--username"> {postUser.username}:
@@ -65,6 +65,7 @@ export default function Posts(props) {
                         name="postText"
                         maxLength={props.maxPostLength}
                         onChange={handleChange}
+                        autoFocus
                     />
 
             }
@@ -90,7 +91,7 @@ export default function Posts(props) {
                     </div>
 
                 }
-                {!updating && <button onClick={() => setReplying(prevReplying => !prevReplying)}> Reply 📣</button>}
+                {!updating && <button onClick={() => setReplying(prevReplying => !prevReplying)} name="reply"> Reply 📣</button>}
             </div>
             {replying &&
                 <PostForm

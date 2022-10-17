@@ -7,7 +7,7 @@ const checkLogin = async function (req, res) {
         if (!user) return res.status(400).json({ success: false, message: 'Could not find user' })
         user.loggedIn = true;
         await user.save()
-        res.status(200).json({ success: true, user });
+        res.status(200).json({ success: true, user, message: `You are logged in as ${user.username}` });
     }
     catch (err) {
         console.log(err)
@@ -23,7 +23,7 @@ const registerUser = async function (req, res) {
         if (checkUser) return res.status(400).json({ success: false, message: 'Username is taken' })
         const user = await User.create(req.body);
         if (!user) return res.status(400).json({ success: false, message: 'Could not create user' });
-        res.status(200).json({ success: true, user })
+        res.status(200).json({ success: true, user, message: "You are registered" })
     }
     catch (err) {
         console.log(err)
@@ -37,7 +37,7 @@ const logout = async (req, res) => {
         if (!user) return res.status(400).json({ Success: false, Message: `No user with username: ${reqUsername}` });
         user.loggedIn = false;
         user.save();
-        res.status(200).json({ success: true });
+        res.status(200).json({ success: true, message: "Logged out" });
 
     }
     catch (err) {
@@ -61,7 +61,7 @@ const updateUser = async (req, res) => {
         );
         // let optionsUpdate = { multi: true, upsert: true }
         // Post.updateMany({ userID: req.params.id }, { username: req.body.username }, optionsUpdate);
-        res.status(200).json({ success: true, message: 'User updated', user });
+        res.status(200).json({ success: true, message: `You updated your user info`, user });
     }
 
     catch (err) {

@@ -5,7 +5,7 @@ export default function ReplyForm(props) {
 
     const handleChange = function (event) {
         if (event.target.value.length >= props.maxPostLength) {
-            props.handleError(`Too many characters, max amount is: ${props.maxPostLength}`)
+            props.handleWriteMessage(`Too many characters, max amount is: ${props.maxPostLength}`)
         }
         setPostText(event.target.value);
     }
@@ -20,7 +20,7 @@ export default function ReplyForm(props) {
         <div className="postForm replyForm">
             <img src={props.img} className="postForm--image" alt="profile"></img>
             <form
-                onChange={props.resetErrorHandler}
+                onChange={props.resetWriteMessageHandler}
                 className="postForm--form reply"
                 onSubmit={handleSubmit}
             >

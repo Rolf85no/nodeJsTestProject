@@ -18,32 +18,33 @@ export default function App() {
   const maxPostLength = 150;
   const maxUsernameLength = 20;
   const defaultImage = 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-800x825.jpg';
-  const [error, setError] = React.useState(null);
+  const [message, setMessage] = React.useState({ message: "", success: null });
 
   const logIn = async (requestBody, methodType) => {
     setLoading(true)
     const response = await checkLogin_RegisterUser_Logout(`${url}/login`, requestBody, methodType);
-    if (!response.success) { setLoading(false); return writeError(response.message) };
+    if (!response.success) { setLoading(false); return writeMessage(response.message, response.success) };
     setChoosenUser(response.user);
     setLoggedIn(true);
-    getUsersAndPosts();
-
+    getUsersAndPosts(response.message);
   }
+
 
   const logOut = async (event) => {
     const methodType = event.target.name;
     const requestBody = { username: choosenUser.username }
     const response = await checkLogin_RegisterUser_Logout(`${url}/logout`, requestBody, methodType);
-    if (!response.success) return writeError(response.message);
+    if (!response.success) return writeMessage(response.message, response.success);
     setLoggedIn(false)
+    writeMessage(response.message, response.success);
   }
 
-  const getUsersAndPosts = async () => {
+  const getUsersAndPosts = async (message) => {
     const requestOptions = {
       method: 'GET'
     }
     const resPosts = await fetchUsersAndPosts(url, requestOptions);
-    if (!resPosts.success) { setLoading(false); return writeError(resPosts.message) };
+    if (!resPosts.success) { setLoading(false); return writeMessage(resPosts.message, resPosts.success) };
     const apiData = await resPosts;
     setBackEndData(apiData.posts);
     setUsers(apiData.users);
@@ -51,6 +52,7 @@ export default function App() {
       if (user._id === choosenUser._id) setChoosenUser(user)
     }
     setLoading(false);
+    setMessage({ message: message, success: true });
   }
 
   const submitPost = async (post) => {
@@ -61,9 +63,9 @@ export default function App() {
     }
     setLoading(true);
     const res = await fetchUsersAndPosts(url, requestOptions);
-    if (!res.success) { setLoading(false); return writeError(res.message) };
+    if (!res.success) { setLoading(false); return writeMessage(res.message, res.success) };
 
-    getUsersAndPosts();
+    getUsersAndPosts(res.message);
 
   }
 
@@ -74,9 +76,8 @@ export default function App() {
     }
     setLoading(true);
     const res = await fetchUsersAndPosts(`${url}/${id}`, requestOptions);
-    if (!res.success) { setLoading(false); return writeError(res.message) };
-    getUsersAndPosts();
-
+    if (!res.success) { setLoading(false); return writeMessage(res.message, res.success) };
+    getUsersAndPosts(res.message);
   }
 
 
@@ -91,9 +92,8 @@ export default function App() {
     }
     setLoading(true);
     const res = await fetchUsersAndPosts(`${url}/${id}`, requestOptions);
-    console.log(res);
-    if (!res.success) { setLoading(false); return writeError(res.message); }
-    getUsersAndPosts();
+    if (!res.success) { setLoading(false); return writeMessage(res.message, res.success); }
+    getUsersAndPosts(res.message);
   }
 
   const updateUser = async (id, username, imageLink) => {
@@ -108,21 +108,20 @@ export default function App() {
     }
     setLoading(true)
     const res = await fetchUsersAndPosts(`${url}/user/${id}`, requestOptions);
-    if (!res.success) { setLoading(false); return writeError(res.message); }
-    getUsersAndPosts();
+    if (!res.success) { setLoading(false); return writeMessage(res.message, res.success); }
+    getUsersAndPosts(res.message);
 
   }
 
-  const resetError = function () {
-    if (error) setError(null)
+  const resetMessage = function () {
+    if (message.message) setMessage({ message: "", success: null })
   }
 
-  //////////// MAKE GENERAL FUNCTION AND STATE FOR BOTH ERROR AND SUCCESS MESSAGE FROM BACK-END
-  const writeError = function (msg) {
-    setError(msg)
+  const writeMessage = function (msg, success) {
+    setMessage({ message: msg, success: success })
   }
 
-  const postsElements = backEndData || !loading
+  const postsElements = backEndData && !loading
     ?
     backEndData.map(post => {
       return (
@@ -139,8 +138,8 @@ export default function App() {
           handleDeletePost={deletePost}
           handleUpdatePost={updatePost}
           maxPostLength={maxPostLength}
-          resetErrorHandler={resetError}
-          handleError={writeError}
+          resetMessageHandler={resetMessage}
+          handleWriteMessage={writeMessage}
           users={users}
           handleSubmit={submitPost}
         />
@@ -159,8 +158,10 @@ export default function App() {
         loggedIn={loggedIn}
         handleLogout={logOut}
       />
+
       <BackEndMessage
-        message={error}
+        message={message.message}
+        success={message.success}
       />
 
       {!loggedIn
@@ -168,19 +169,23 @@ export default function App() {
         ?
         <Login
           handleLogin={logIn}
-          resetErrorHandler={resetError}
+          resetMessageHandler={resetMessage}
+          handleWriteMessage={writeMessage}
         />
 
         :
 
         <main>
-          <div className="somethingContainer"></div>
+
+          <div className="somethingContainer">
+
+          </div>
           <div className="postsAndPostFormcontainer">
             <PostForm
               handleSubmit={submitPost}
               maxPostLength={maxPostLength}
-              resetErrorHandler={resetError}
-              handleError={writeError}
+              resetMessageHandler={resetMessage}
+              handleWriteMessage={writeMessage}
               maxUsernameLength={maxUsernameLength}
               img={choosenUser.img ? choosenUser.img : defaultImage}
               typeOfPost="Post"

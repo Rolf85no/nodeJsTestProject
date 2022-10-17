@@ -32,7 +32,7 @@ const createPost = async (req, res) => {
     try {
         const post = await Post.create(req.body);
         if (!post) res.status(404).json({ success: false, message: 'Could not create post' });
-        res.status(200).json({ success: true, message: 'Created Post' })
+        res.status(200).json({ success: true, message: 'New post created' })
     }
 
     catch (err) {

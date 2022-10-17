@@ -23,8 +23,8 @@ export default function BurgerMenu(props) {
                 <li className="burgerMenu--lines"></li>
             </ul>
             <ul className="burgerMenu--linksList hidden" ref={linksList}>
-                <li className="burgerMenu--linksList--links">Edit profile</li>
-                <li className="burgerMenu--linksList--links" onClick={props.handleLogout}>Logout </li>
+                <li className="burgerMenu--linksList--links"><button>Edit profile</button></li>
+                <li className="burgerMenu--linksList--links" ><button onClick={props.handleLogout} name="PATCH">Log out </button></li>
             </ul>
         </section>
     )
