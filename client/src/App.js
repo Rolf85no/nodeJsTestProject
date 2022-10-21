@@ -121,35 +121,6 @@ export default function App() {
     setMessage({ message: msg, success: success })
   }
 
-  const postsElements = backEndData && !loading
-    ?
-    backEndData.map(post => {
-      return (
-        < Posts
-          key={post._id}
-          id={post._id}
-          postUserId={post.userID}
-          choosenUserName={choosenUser.username}
-          choosenUserId={choosenUser._id}
-          choosenUserImg={choosenUser.img ? choosenUser.img : defaultImage}
-          defaultImage={defaultImage}
-          post={post.post}
-          replies={post.replies}
-          handleDeletePost={deletePost}
-          handleUpdatePost={updatePost}
-          maxPostLength={maxPostLength}
-          resetMessageHandler={resetMessage}
-          handleWriteMessage={writeMessage}
-          users={users}
-          handleSubmit={submitPost}
-        />
-      )
-    }).reverse()
-
-    :
-
-    <div> loading.. </div>
-
 
   return (
 
@@ -160,8 +131,7 @@ export default function App() {
       />
 
       <BackEndMessage
-        message={message.message}
-        success={message.success}
+        message={message}
       />
 
       {!loggedIn
@@ -182,20 +152,50 @@ export default function App() {
           </div>
           <div className="postsAndPostFormcontainer">
             <PostForm
+              choosenUser={choosenUser}
               handleSubmit={submitPost}
               maxPostLength={maxPostLength}
               resetMessageHandler={resetMessage}
               handleWriteMessage={writeMessage}
               maxUsernameLength={maxUsernameLength}
-              img={choosenUser.img ? choosenUser.img : defaultImage}
+              defaultImage={defaultImage}
               typeOfPost="Post"
               handleUpdateUser={updateUser}
-              username={choosenUser.username}
-              id={choosenUser._id}
+
             />
             <h3>News-reel:</h3>
 
-            {postsElements}
+
+            {backEndData && !loading ?
+              backEndData.map(post =>
+
+                < Posts
+                  key={post._id}
+                  postValues={post}
+                  // id={post._id}
+                  // postUserId={post.userID}
+                  // post={post.post}
+                  // replies={post.replies}
+                  choosenUser={choosenUser}
+                  // choosenUserName={choosenUser.username}
+                  // choosenUserId={choosenUser._id}
+                  // choosenUserImg={choosenUser.img ? choosenUser.img : defaultImage}
+                  users={users}
+                  defaultImage={defaultImage}
+                  handleDeletePost={deletePost}
+                  handleUpdatePost={updatePost}
+                  resetMessageHandler={resetMessage}
+                  handleWriteMessage={writeMessage}
+                  maxPostLength={maxPostLength}
+
+                  handleSubmit={submitPost}
+
+                />).reverse()
+              :
+              <>loading...</>
+            }
+
+
           </div>
 
           {users &&

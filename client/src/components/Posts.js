@@ -2,25 +2,17 @@ import React from 'react'
 import Replies from '../components/Replies';
 import PostForm from './PostForm';
 
-export default function Posts(props) {
+export default function Posts({ postValues, choosenUser, users, defaultImage, handleDeletePost, handleUpdatePost, resetMessageHandler, handleWriteMessage, maxPostLength }) {
     const [updating, setUpdating] = React.useState(false);
     const [replying, setReplying] = React.useState(false);
     const [showReplies, setShowReplies] = React.useState(true);
     const [editedPost, setEditedPost] = React.useState("")
-    const [postUser, setPostUser] = React.useState({})
-
-    React.useEffect(() => {
-        for (const user of props.users) {
-            if (props.postUserId === user._id) {
-                setPostUser(user);
-            }
-        }
-    }, [props.users, props.postUserId])
-
-
+    const [postUser] = users.filter(user => {
+        return user._id === postValues.userID
+    })
     const handleChange = function (event) {
-        if (event.target.value.length >= props.maxPostLength) {
-            props.handleWriteMessage(`Too many characters, max amount is: ${props.maxPostLength}`)
+        if (event.target.value.length >= maxPostLength) {
+            handleWriteMessage(`Too many characters, max amount is: ${maxPostLength}`)
         }
         setEditedPost(event.target.value);
     }
@@ -28,26 +20,13 @@ export default function Posts(props) {
     const updatePost = (e) => {
         e.preventDefault();
         setUpdating(prevUpdate => !prevUpdate)
-        props.handleUpdatePost(editedPost, props.id, 'update')
+        handleUpdatePost(editedPost, postValues._id, 'update')
     }
 
-    const replyElements = props.replies.map(reply => {
-        return (
-            <Replies
-                replyUserId={reply.userID}
-                post={reply.post}
-                id={reply._id}
-                key={reply._id}
-                users={props.users}
-            />
-        )
-    })
-
-
     return (
-        <div className="postContainer" onChange={props.resetMessageHandler}>
+        <div className="postContainer" onChange={resetMessageHandler}>
             <div className="postContainer--info">
-                <div><img src={postUser.img ? postUser.img : props.defaultImage} className="postContainer--info--image" alt="profile"></img></div>
+                <div><img src={postUser.img ? postUser.img : defaultImage} className="postContainer--info--image" alt="profile"></img></div>
                 <h4 className="postContainer--info--username"> {postUser.username}:
                     <span className="postContainer--logInStatus" style={{ color: postUser.loggedIn ? 'green' : 'red' }}> ●</span>
                 </h4>
@@ -56,22 +35,23 @@ export default function Posts(props) {
             {
                 !updating
                     ?
-                    <p className="postContainer--postText">{props.post}</p>
+                    <p className="postContainer--postText">{postValues.post}</p>
                     :
                     <textarea
-                        placeholder={props.post}
+                        placeholder={postValues.post}
                         className="postContainer--updateInput"
                         type="text"
                         name="postText"
-                        maxLength={props.maxPostLength}
+                        maxLength={maxPostLength}
                         onChange={handleChange}
                         autoFocus
                     />
 
             }
+            <hr />
             <div className="postContainer--buttons">
                 {
-                    props.postUserId === props.choosenUserId
+                    postValues.userID === choosenUser._id
                     &&
 
                     <div className="deleteEditReplyButtons">
@@ -79,7 +59,7 @@ export default function Posts(props) {
                             !updating
                                 ?
                                 <div>
-                                    <button onClick={() => props.handleDeletePost(props.id)}> Delete 🗑
+                                    <button onClick={() => handleDeletePost(postValues._id)}> Delete 🗑
                                     </button>
 
                                     <button onClick={() => setUpdating(prevUpdate => !prevUpdate)}> Edit ✒️</button>
@@ -91,27 +71,39 @@ export default function Posts(props) {
                     </div>
 
                 }
-                {!updating && <button onClick={() => setReplying(prevReplying => !prevReplying)} name="reply"> Reply 📣</button>}
+                {!updating && <button onClick={() => setReplying(prevReplying => !prevReplying)} name="reply"> {replying ? 'Back ❌' : 'Reply 📣'}</button>}
             </div>
+            <hr />
             {replying &&
                 <PostForm
-                    handleSubmit={props.handleUpdatePost}
-                    maxPostLength={props.maxPostLength}
-                    img={props.choosenUserImg}
-                    typeOfPost="Reply"
-                    username={props.choosenUserName}
-                    choosenUserId={props.choosenUserId}
-                    postId={props.id}
+                    choosenUser={choosenUser}
+                    handleSubmit={handleUpdatePost}
+                    maxPostLength={maxPostLength}
+                    typeOfPost="reply"
+                    repliedPostId={postValues._id}
+                    resetMessageHandler={resetMessageHandler}
+                    handleWriteMessage={handleWriteMessage}
                 />
             }
-            {props.replies.length > 0 &&
+            {postValues.replies.length > 0 &&
                 <div>
 
-                    <button onClick={() => setShowReplies(prev => !prev)} className="showHide--button">{showReplies ? 'Hide replies' : 'Show replies'}</button>
+                    <button onClick={() => setShowReplies(prev => !prev)} className="showHide--button">{showReplies ? 'Hide replies ⌃' : 'Show replies ⌄'}</button>
                 </div>
             }
             {
-                showReplies && replyElements
+                showReplies && postValues.replies.map(reply => {
+                    return (
+                        <Replies
+                            reply={reply}
+                            // replyUserId={reply.userID}
+                            // post={reply.post}
+                            // id={reply._id}
+                            key={reply._id}
+                            users={users}
+                        />
+                    )
+                }).reverse()
 
             }
         </div >

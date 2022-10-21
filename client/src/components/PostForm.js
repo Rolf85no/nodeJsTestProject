@@ -1,13 +1,13 @@
 import React from "react";
 import UpdateUserForm from "./UpdateUserForm";
 
-export default function PostForm(props) {
+export default function PostForm({ choosenUser, maxPostLength, handleWriteMessage, handleSubmit, typeOfPost, handleUpdateUser, defaultImage, resetMessageHandler, repliedPostId }) {
     const [editing, setEditing] = React.useState(false);
     const [postText, setPostText] = React.useState('');
 
     const handleChange = function (event) {
-        if (event.target.value.length >= props.maxPostLength) {
-            props.handleWriteMessage(`Too many characters, max amount is: ${props.maxPostLength}`)
+        if (event.target.value.length >= maxPostLength) {
+            handleWriteMessage(`Too many characters, max amount is: ${maxPostLength}`)
         }
         setPostText(event.target.value);
     }
@@ -18,37 +18,37 @@ export default function PostForm(props) {
 
     const submitPost = (event) => {
         event.preventDefault();
-        if (props.typeOfPost === "Post") props.handleSubmit(postText);
-        else props.handleSubmit(postText, props.postId, 'reply');
+        if (typeOfPost === "Post") handleSubmit(postText);
+        else handleSubmit(postText, repliedPostId, typeOfPost);
         setPostText('');
     }
 
     return (
-        editing && props.typeOfPost === "Post"
+        editing && typeOfPost === "Post"
             ?
             <UpdateUserForm
-                id={props.id}
+                id={choosenUser._id}
                 toggleEditing={toggleEditing}
-                username={props.username}
-                handleUpdateUser={props.handleUpdateUser}
+                username={choosenUser.username}
+                handleUpdateUser={handleUpdateUser}
             />
             :
             <div className="postForm">
-                <img src={props.img} className="postForm--image" alt="profile" onClick={toggleEditing}></img>
-                <form onChange={props.resetMessageHandler} className="postForm--form" onSubmit={submitPost}>
+                <img src={choosenUser.img ? choosenUser.img : defaultImage} className="postForm--image" alt="profile" onClick={toggleEditing}></img>
+                <form onChange={resetMessageHandler} className="postForm--form" onSubmit={submitPost}>
                     <input
                         className="postForm--postText"
                         name="postText" type="text"
-                        maxLength={props.maxPostLength}
+                        maxLength={maxPostLength}
                         onChange={handleChange}
-                        aria-label="Your post"
+                        aria-label="Write post"
                         value={postText}
                         autoFocus
                     >
 
                     </input>
                     <button className="postForm--button" type="submit" disabled={postText.length === 0}>
-                        Submit
+                        {typeOfPost === 'Post' ? 'Submit' : 'Reply'}
                     </button>
                 </form>
             </div >
