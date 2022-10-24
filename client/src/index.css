@@ -23,8 +23,9 @@ body{
 }
 
 .navbar{
-  background-color: var(--white-bgColor);
-  color:  var(--darkGreen-bgColor);
+  
+  background-color: var(--darkGreen-bgColor);
+  color:  var(--white-bgColor);
   box-shadow: var(--box-shadow-inputs);
   width: 100vw;
   height: 48px;
@@ -91,12 +92,6 @@ main{
 }
 
 
-button:not([disabled]):hover{
-  background-color: var(--button-textColor);
-  color: var(--darkGreen-bgColor);
-
-}
-
 button:disabled{
   cursor: none;
   opacity: 0.5;
@@ -104,6 +99,9 @@ button:disabled{
 
 .postsAndPostFormcontainer{
   margin: 0 auto;
+}
+.postsAndPostFormConntainer--title{
+  margin: 0;
 }
 
 .postForm{
@@ -122,29 +120,36 @@ button:disabled{
   justify-content: space-between;
   align-items: center;
 }
-
-.postForm--image, .postContainer--info--image{
-  height: calc(2rem + 1vw);
-  object-fit: cover;
-  border-radius: 25%;
-  cursor: pointer;
-}
-
-.postContainer--info--image{
-  height: calc(1rem + 1vw);
-  margin-right: 8px;
-  cursor: none;
-}
-.postContainer--info--username{
-  margin: 8px 0;
-}
-
-.postContainer--info{
+.usernameAndImage{
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0;
+  width: 90%;
+  margin: 8px 0 0 0;
 }
+
+.usernameAndImage--image{
+  position: relative;
+}
+
+.postForm--image, .usernameAndImage--image img{
+  height: calc(2rem + 1vw);
+  width: calc(2rem + 1vw);;
+  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.usernameAndImage--image img{
+  height: calc(1.75rem + 1vw);
+  margin-right: 8px;
+  cursor: none;
+}
+.usernameAndImage--username{
+  margin: 8px 0;
+}
+
+
 
 select{
   border-radius: 10px;
@@ -168,8 +173,8 @@ select{
 .usersContainer--userProfile img{
   height: calc(1.5rem + 1vw);
   object-fit: cover;
-  border-radius: 50%;
   margin-right: 15%;
+  border-radius: 50%;
 }
 
 .postForm--button, .updateUser--button{
@@ -205,6 +210,27 @@ input, textarea{
   padding: 8px;
   background-color: var(--white-bgColor);
   letter-spacing: 1px;
+  text-align: left;
+}
+
+.showHide--container{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.usernameAndImage--image--logInStatus{
+  position: absolute;
+  top: calc(0.75rem + 1vw);
+  left: calc(1.25rem + 1vw);
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  background-color: white;
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  padding: 0;
 }
 
 .usersContainer{
@@ -227,12 +253,13 @@ input, textarea{
 .replyContainer{
   flex-direction: column;
   background-color: rgb(233, 224, 224);
-  width: 80%;
+  width: 90%;
   border-radius: 10px;
   align-items: center;
   margin-bottom: 8px;
   font-size: 0.7rem;
   letter-spacing: 1px;
+  padding: 4px 8px;
 }
 
 .replyContainer--username{
@@ -242,7 +269,6 @@ input, textarea{
 
 .replyContainer--postText{
   margin: 0;
-  padding: 4px 8px;
   font-size: 0.8rem;
 }
 
@@ -257,7 +283,7 @@ input, textarea{
 .showHide--button{
   width: calc(8rem + 1vw);
   height: calc(1.5rem + 1vw);
-  margin-bottom: 18px;
+  margin: 0 auto;
   background-color: transparent;
   color: var(--text-black);
   border:none;
@@ -266,12 +292,9 @@ input, textarea{
 
 .postContainer--postText{
   width: 90%;
-  margin-top: 8px;
+  margin: 2px 0;
 }
 
-.postContainer--username{
-  margin: 4px 0;
-}
 
 .postContainer--buttons{
   display: flex;
@@ -292,15 +315,24 @@ input, textarea{
   margin: 8px auto;
 }
 
+.logIn label{
+  margin-right: 8px;
+}
+
+.logIn--buttons{
+  margin: 0 auto;
+}
 .logIn--button{
   margin: 8px 16px;
   width: calc(6rem + 1vw);
-  height: calc(1rem + 1vw);
+  height: calc(1.5rem + 1vw);
+ 
 }
 
 .postContainer--updateInput{
   margin: 8px;
   width: 90%;
+  min-height: 15vh;
 }
 
 .updateUser{
@@ -324,9 +356,10 @@ input, textarea{
   top: 0;
   right: 0;
   width: 40%;
-  background-color: var(--white-bgColor);
+  background-color: inherit;
   display: flex;
   flex-direction: column;
+  z-index: 1;
 }
 
 .burgerMenu--ul{
@@ -335,20 +368,17 @@ input, textarea{
 }
 
 .burgerMenu--lines{
-  background-color: var(--darkGreen-bgColor);
-  width: 20%;
+  background-color: var(--white-bgColor);
+  width: 32px;
   height: 4px;
   margin: 8px auto;
 }
 
 .burgerMenu button{
-  background-color: var(--white-bgColor);
-  color: var(--darkGreen-bgColor);
+  background-color: inherit;
+  color: var(--white-bgColor);
 }
 
-.cross{
-  margin-top: 8px;
-}
 
 .cross :first-child{
   transform: rotate(-45deg) translate(-8px, 9px);
@@ -402,12 +432,16 @@ input, textarea{
     width: 50%;
     margin: 0 auto;
   }
+
+  button:not([disabled]):hover{
+    background-color: var(--button-textColor);
+    color: var(--darkGreen-bgColor);
+  }
+
   .usersContainer, .somethingContainer{
     display: flex;
     flex-direction: column;
-
     border-radius: 5px;
-
     margin: 8px auto;
     background-color: transparent;
     margin-top: 18px;
@@ -422,18 +456,13 @@ input, textarea{
   }
 
   .burgerMenu{
-    display: none;
-  }
-
-  .navbar--logout{
-    margin-right: 16px;
-    font-size: 1rem;
-    width: calc(8rem + 1vw);
-    box-shadow: none;
-    height: 60%;
-    background-color: transparent;
-    color: var(--darkGreen-bgColor);
-    display: block;
+    width: 25%;
     
   }
+
+  .burgerMenu--linksList--links button{
+    font-size: calc(0.5rem + 1vw);
+  }
+
+
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function BurgerMenu(props) {
+export default function BurgerMenu({ handleLogout }) {
     const linksList = React.useRef(null);
     const showLinks = () => {
         const burgerLines = document.querySelector('.burgerMenu--ul');
@@ -15,6 +15,7 @@ export default function BurgerMenu(props) {
         }
         ;
     }
+
     return (
         <section className="burgerMenu">
             <ul onClick={showLinks} className="burgerMenu--ul">
@@ -24,7 +25,7 @@ export default function BurgerMenu(props) {
             </ul>
             <ul className="burgerMenu--linksList hidden" ref={linksList}>
                 <li className="burgerMenu--linksList--links"><button>Edit profile</button></li>
-                <li className="burgerMenu--linksList--links" ><button onClick={props.handleLogout} name="PATCH">Log out </button></li>
+                <li className="burgerMenu--linksList--links" ><button onClick={handleLogout} name="PATCH">Log out </button></li>
             </ul>
         </section>
     )

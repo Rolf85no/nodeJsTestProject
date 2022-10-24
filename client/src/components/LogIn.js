@@ -31,13 +31,13 @@ export default function LogIn(props) {
             </div>
             {registering
                 ?
-                <div className="login--buttons">
+                <div className="logIn--buttons">
                     <button className="logIn--button"> Submit</button>
                     <button className="logIn--button" onClick={() => setRegistering(false)} type="button">Back</button>
 
                 </div>
                 :
-                <div className="login--buttons">
+                <div className="logIn--buttons">
                     <button className="logIn--button"> Log In</button>
                     <button className="logIn--button" onClick={() => setRegistering(true)} type="button">Register</button>
                 </div>

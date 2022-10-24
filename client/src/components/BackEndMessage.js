@@ -1,8 +1,6 @@
 import React from 'react'
 
 export default function BackEndMessage({ message }) {
-
-
     const styles = {
         color: message.success ? 'Green' : 'Red'
     }

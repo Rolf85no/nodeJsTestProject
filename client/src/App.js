@@ -37,6 +37,7 @@ export default function App() {
     if (!response.success) return writeMessage(response.message, response.success);
     setLoggedIn(false)
     writeMessage(response.message, response.success);
+    setChoosenUser("");
   }
 
   const getUsersAndPosts = async (message) => {
@@ -48,9 +49,12 @@ export default function App() {
     const apiData = await resPosts;
     setBackEndData(apiData.posts);
     setUsers(apiData.users);
-    for (const user of apiData.users) {
-      if (user._id === choosenUser._id) setChoosenUser(user)
-    }
+    // for (const user of apiData.users) {
+    //   if (user._id === choosenUser._id) {
+    //     setChoosenUser(user)
+    //   }
+
+    // }
     setLoading(false);
     setMessage({ message: message, success: true });
   }
@@ -121,7 +125,6 @@ export default function App() {
     setMessage({ message: msg, success: success })
   }
 
-
   return (
 
     <div>
@@ -163,7 +166,7 @@ export default function App() {
               handleUpdateUser={updateUser}
 
             />
-            <h3>News-reel:</h3>
+            <h3 className="postsAndPostFormConntainer--title">News-reel:</h3>
 
 
             {backEndData && !loading ?
@@ -172,14 +175,7 @@ export default function App() {
                 < Posts
                   key={post._id}
                   postValues={post}
-                  // id={post._id}
-                  // postUserId={post.userID}
-                  // post={post.post}
-                  // replies={post.replies}
                   choosenUser={choosenUser}
-                  // choosenUserName={choosenUser.username}
-                  // choosenUserId={choosenUser._id}
-                  // choosenUserImg={choosenUser.img ? choosenUser.img : defaultImage}
                   users={users}
                   defaultImage={defaultImage}
                   handleDeletePost={deletePost}

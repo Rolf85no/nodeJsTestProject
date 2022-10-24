@@ -1,6 +1,7 @@
 import React from 'react'
 import Replies from '../components/Replies';
 import PostForm from './PostForm';
+import UserNameAndImage from './UserNameAndImage';
 
 export default function Posts({ postValues, choosenUser, users, defaultImage, handleDeletePost, handleUpdatePost, resetMessageHandler, handleWriteMessage, maxPostLength }) {
     const [updating, setUpdating] = React.useState(false);
@@ -25,12 +26,11 @@ export default function Posts({ postValues, choosenUser, users, defaultImage, ha
 
     return (
         <div className="postContainer" onChange={resetMessageHandler}>
-            <div className="postContainer--info">
-                <div><img src={postUser.img ? postUser.img : defaultImage} className="postContainer--info--image" alt="profile"></img></div>
-                <h4 className="postContainer--info--username"> {postUser.username}:
-                    <span className="postContainer--logInStatus" style={{ color: postUser.loggedIn ? 'green' : 'red' }}> ●</span>
-                </h4>
-            </div>
+            <UserNameAndImage
+                postUser={postUser}
+                key={postUser._id}
+                defaultImage={defaultImage}
+            />
 
             {
                 !updating
@@ -73,7 +73,7 @@ export default function Posts({ postValues, choosenUser, users, defaultImage, ha
                 }
                 {!updating && <button onClick={() => setReplying(prevReplying => !prevReplying)} name="reply"> {replying ? 'Back ❌' : 'Reply 📣'}</button>}
             </div>
-            <hr />
+
             {replying &&
                 <PostForm
                     choosenUser={choosenUser}
@@ -86,8 +86,8 @@ export default function Posts({ postValues, choosenUser, users, defaultImage, ha
                 />
             }
             {postValues.replies.length > 0 &&
-                <div>
-
+                <div className="showHide--container">
+                    <hr></hr>
                     <button onClick={() => setShowReplies(prev => !prev)} className="showHide--button">{showReplies ? 'Hide replies ⌃' : 'Show replies ⌄'}</button>
                 </div>
             }
@@ -96,9 +96,6 @@ export default function Posts({ postValues, choosenUser, users, defaultImage, ha
                     return (
                         <Replies
                             reply={reply}
-                            // replyUserId={reply.userID}
-                            // post={reply.post}
-                            // id={reply._id}
                             key={reply._id}
                             users={users}
                         />

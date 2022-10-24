@@ -3,7 +3,7 @@ const Post = require('../models/Post');
 
 const checkLogin = async function (req, res) {
     try {
-        let user = await User.findOne({ username: req.body.username, password: req.body.password })
+        let user = await User.findOne({ username: req.body.username, password: req.body.password }).select(['-password'])
         if (!user) return res.status(400).json({ success: false, message: 'Could not find user' })
         user.loggedIn = true;
         await user.save()
@@ -59,8 +59,6 @@ const updateUser = async (req, res) => {
             { $set: { "username": req.body.username } },
             { multi: true }
         );
-        // let optionsUpdate = { multi: true, upsert: true }
-        // Post.updateMany({ userID: req.params.id }, { username: req.body.username }, optionsUpdate);
         res.status(200).json({ success: true, message: `You updated your user info`, user });
     }
 
