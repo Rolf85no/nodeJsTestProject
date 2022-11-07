@@ -183,7 +183,6 @@ export default function App() {
                   resetMessageHandler={resetMessage}
                   handleWriteMessage={writeMessage}
                   maxPostLength={maxPostLength}
-
                   handleSubmit={submitPost}
 
                 />).reverse()
